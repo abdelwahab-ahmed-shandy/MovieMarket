@@ -1,0 +1,611 @@
+﻿@model DashboardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container-fluid px-4 mt-4">
+    <!-- Header Section -->
+    <div class="dashboard-header text-center mb-5">
+        <h1 class="display-5 fw-bold text-primary mb-3">
+            <i class="fas fa-tachometer-alt me-2"></i>@ViewData["Title"]
+        </h1>
+        <p class="lead text-muted">Manage all aspects of your application from this centralized control panel</p>
+    </div>
+
+    <!-- Quick Stats Row -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card stat-card bg-primary bg-opacity-10 border-primary border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <i class="fas fa-users fa-2x text-primary"></i>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2 text-muted">Total Users</h6>
+                            <h3 class="card-title mb-0">@Model.TotalUsers</h3>
+                        </div>
+                        <i class="fas fa-users fa-2x text-primary opacity-25"></i>
+                    </div>
+                    <div class="mt-3">
+                        <span class="badge bg-primary bg-opacity-10 text-primary">+@Model.NewUsersThisMonth this month</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card stat-card bg-success bg-opacity-10 border-success border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <i class="fas fa-film fa-2x text-success"></i>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2 text-muted">Active Content</h6>
+                            <h3 class="card-title mb-0">@(Model.TotalMovies + Model.TotalTvSeries)</h3>
+                        </div>
+                        <i class="fas fa-film fa-2x text-success opacity-25"></i>
+                    </div>
+                    <div class="mt-3">
+                        <span class="badge bg-success bg-opacity-10 text-success">+@Model.NewContentToday new today</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card stat-card bg-warning bg-opacity-10 border-warning border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <!-- Icon in header -->
+                    <div class="text-center mb-3">
+                        <i class="fas fa-shopping-cart fa-2x text-warning"></i>
+                    </div>
+                    <!-- Stats section -->
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2 text-muted">Pending Orders</h6>
+                            <h3 class="card-title mb-0">@Model.PendingOrders</h3>
+                        </div>
+                        <i class="fas fa-shopping-cart fa-2x text-warning opacity-25"></i>
+                    </div>
+                    <div class="mt-3">
+                        <span class="badge bg-warning bg-opacity-10 text-warning">@Model.HighPriorityOrders high priority</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card stat-card bg-info bg-opacity-10 border-info border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="card-subtitle mb-2 text-muted">Recent Content</h6>
+                            <h3 class="card-title mb-0">@Model.NewContentToday</h3>
+                        </div>
+                        <i class="fas fa-plus-circle fa-2x text-info opacity-25"></i>
+                    </div>
+                    <div class="mt-3">
+                        <span class="badge bg-info bg-opacity-10 text-info">Today's additions</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Management Section -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+            <h5 class="mb-0">
+                <i class="fas fa-photo-film me-2 text-primary"></i>Content Management
+            </h5>
+            <button class="btn btn-sm btn-outline-primary">
+                <i class="fas fa-cog me-1"></i> Settings
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="row g-4">
+                <!-- Cinema Management Card -->
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <div class="card management-card h-100 border-0 shadow-sm hover-lift">
+                        <div class="card-body text-center p-4">
+                            <div class="icon-wrapper mb-3 bg-primary bg-opacity-10 text-primary border-primary rounded-circle mx-auto">
+                                <i class="fas fa-film fa-2x"></i>
+                            </div>
+                            <h5 class="card-title mb-3">Cinema Management</h5>
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="/Admin/Cinema" class="btn btn-sm bg-primary bg-opacity-10 text-primary border-primary border">
+                                    <i class="fas fa-cog me-1"></i> Manage
+                                </a>
+                                <a href="/Admin/Cinema/Create" class="btn btn-sm btn-outline-secondary">
+                                    <i class="fas fa-plus me-1"></i> Create
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Movie Management Card -->
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <div class="card management-card h-100 border-0 shadow-sm hover-lift">
+                        <div class="card-body text-center p-4">
+                            <div class="icon-wrapper mb-3 bg-success bg-opacity-10 text-success border-success rounded-circle mx-auto">
+                                <i class="fas fa-video fa-2x"></i>
+                            </div>
+                            <h5 class="card-title mb-3">Movie Management</h5>
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="/Admin/Movie" class="btn btn-sm bg-success bg-opacity-10 text-success border-success border">
+                                    <i class="fas fa-cog me-1"></i> Manage
+                                </a>
+                                <a href="/Admin/Movie/Create" class="btn btn-sm btn-outline-secondary">
+                                    <i class="fas fa-plus me-1"></i> Create
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reviews Management Card -->
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <div class="card management-card h-100 border-0 shadow-sm hover-lift">
+                        <div class="card-body text-center p-4">
+                            <div class="icon-wrapper mb-3 bg-orange bg-opacity-10 text-orange border-orange rounded-circle mx-auto">
+                                <i class="fas fa-comments fa-2x"></i>
+                            </div>
+                            <h5 class="card-title mb-3">Reviews Management</h5>
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="/Admin/Reviews" class="btn btn-sm bg-orange bg-opacity-20 text-orange border-orange border">
+                                    <i class="fas fa-cog me-1"></i> Manage
+                                </a>
+                                <a href="/Admin/Reviews/Create" class="btn btn-sm btn-outline-secondary">
+                                    <i class="fas fa-plus me-1"></i> Create
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category Management Card -->
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <div class="card management-card h-100 border-0 shadow-sm hover-lift">
+                        <div class="card-body text-center p-4">
+                            <div class="icon-wrapper mb-3 bg-warning bg-opacity-10 text-warning border-warning rounded-circle mx-auto">
+                                <i class="fas fa-tags fa-2x"></i>
+                            </div>
+                            <h5 class="card-title mb-3">Category Management</h5>
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="/Admin/Category" class="btn btn-sm bg-warning bg-opacity-10 text-warning border-warning border">
+                                    <i class="fas fa-cog me-1"></i> Manage
+                                </a>
+                                <a href="/Admin/Category/Create" class="btn btn-sm btn-outline-secondary">
+                                    <i class="fas fa-plus me-1"></i> Create
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Character Management Card -->
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <div class="card management-card h-100 border-0 shadow-sm hover-lift">
+                        <div class="card-body text-center p-4">
+                            <div class="icon-wrapper mb-3 bg-info bg-opacity-10 text-info border-info rounded-circle mx-auto">
+                                <i class="fas fa-user-group fa-2x"></i>
+                            </div>
+                            <h5 class="card-title mb-3">Character Management</h5>
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="/Admin/Character" class="btn btn-sm bg-info bg-opacity-10 text-info border-info border">
+                                    <i class="fas fa-cog me-1"></i> Manage
+                                </a>
+                                <a href="/Admin/Character/Create" class="btn btn-sm btn-outline-secondary">
+                                    <i class="fas fa-plus me-1"></i> Create
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TV Series Management Card -->
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <div class="card management-card h-100 border-0 shadow-sm hover-lift">
+                        <div class="card-body text-center p-4">
+                            <div class="icon-wrapper mb-3 bg-secondary bg-opacity-10 text-secondary border-secondary rounded-circle mx-auto">
+                                <i class="fas fa-tv fa-2x"></i>
+                            </div>
+                            <h5 class="card-title mb-3">TV Series Management</h5>
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="/Admin/TvSeries" class="btn btn-sm bg-secondary bg-opacity-10 text-secondary border-secondary border">
+                                    <i class="fas fa-cog me-1"></i> Manage
+                                </a>
+                                <a href="/Admin/TvSeries/Create" class="btn btn-sm btn-outline-secondary">
+                                    <i class="fas fa-plus me-1"></i> Create
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Season Management Card -->
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <div class="card management-card h-100 border-0 shadow-sm hover-lift">
+                        <div class="card-body text-center p-4">
+                            <div class="icon-wrapper mb-3 bg-danger bg-opacity-10 text-danger border-danger rounded-circle mx-auto">
+                                <i class="fas fa-calendar-days fa-2x"></i>
+                            </div>
+                            <h5 class="card-title mb-3">Season Management</h5>
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="/Admin/Season" class="btn btn-sm bg-danger bg-opacity-10 text-danger border-danger border">
+                                    <i class="fas fa-cog me-1"></i> Manage
+                                </a>
+                                <a href="/Admin/Season/Create" class="btn btn-sm btn-outline-secondary">
+                                    <i class="fas fa-plus me-1"></i> Create
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Episode Management Card -->
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <div class="card management-card h-100 border-0 shadow-sm hover-lift">
+                        <div class="card-body text-center p-4">
+                            <div class="icon-wrapper mb-3 bg-indigo bg-opacity-10 text-indigo border-indigo rounded-circle mx-auto">
+                                <i class="fas fa-list-ol fa-2x"></i>
+                            </div>
+                            <h5 class="card-title mb-3">Episode Management</h5>
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="/Admin/Episode" class="btn btn-sm bg-indigo bg-opacity-20 text-indigo border-indigo border">
+                                    <i class="fas fa-cog me-1"></i> Manage
+                                </a>
+                                <a href="/Admin/Episode/Create" class="btn btn-sm btn-outline-secondary">
+                                    <i class="fas fa-plus me-1"></i> Create
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- User Management Section -->
+    @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+    {
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+                <h5 class="mb-0">
+                    <i class="fas fa-users-gear me-2 text-primary"></i>User Management
+                </h5>
+                <button class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-user-shield me-1"></i> Permissions
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="row g-4">
+                    @if (User.IsInRole("SuperAdmin"))
+                    {
+                        <!-- Super Admins Card -->
+                        <div class="col-xl-4 col-md-6">
+                            <div class="card user-management-card bg-dark text-white h-100 shadow-sm">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="icon-wrapper bg-dark-light rounded-circle me-3">
+                                            <i class="fas fa-crown text-warning"></i>
+                                        </div>
+                                        <h5 class="card-title mb-0">Super Admins</h5>
+                                    </div>
+                                    <p class="card-text text-muted-light mb-4">
+                                        Manage all super administrators with full system access.
+                                    </p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <a href="/Admin/SuperAdmins/AllSuperAdmins" class="btn btn-sm btn-outline-light">
+                                            <i class="fas fa-users me-1"></i> View All
+                                        </a>
+                                        <a href="/Admin/SuperAdmins/Create" class="btn btn-sm btn-warning">
+                                            <i class="fas fa-plus me-1"></i> Add New
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Admins Card -->
+                        <div class="col-xl-4 col-md-6">
+                            <div class="card user-management-card bg-primary text-white h-100 shadow-sm">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="icon-wrapper bg-primary-light rounded-circle me-3">
+                                            <i class="fas fa-user-shield"></i>
+                                        </div>
+                                        <h5 class="card-title mb-0">Admins</h5>
+                                    </div>
+                                    <p class="card-text text-muted-light mb-4">
+                                        Manage administrators with limited system access.
+                                    </p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <a href="/Admin/Admins/AllAdmins" class="btn btn-sm btn-outline-light">
+                                            <i class="fas fa-users me-1"></i> View All
+                                        </a>
+                                        <a href="/Admin/Admins/Create" class="btn btn-sm btn-light text-primary">
+                                            <i class="fas fa-plus me-1"></i> Add New
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Customers Card -->
+                    <div class="col-xl-4 col-md-6">
+                        <div class="card user-management-card bg-secondary text-white h-100 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="icon-wrapper bg-secondary-light rounded-circle me-3">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <h5 class="card-title mb-0">Customers</h5>
+                                </div>
+                                <p class="card-text text-muted-light mb-4">
+                                    Manage all customer accounts and profiles.
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a href="/Admin/Customers/AllCustomers" class="btn btn-sm btn-outline-light">
+                                        <i class="fas fa-users me-1"></i> View All
+                                    </a>
+                                    <a href="/Admin/Customers/Create" class="btn btn-sm btn-light text-secondary">
+                                        <i class="fas fa-plus me-1"></i> Add New
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Orders Management Section -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+            <h5 class="mb-0">
+                <i class="fas fa-bag-shopping me-2 text-primary"></i>Orders Management
+            </h5>
+            <button class="btn btn-sm btn-outline-primary">
+                <i class="fas fa-chart-line me-1"></i> Reports
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="row g-4">
+                <!-- All Orders Card -->
+                <div class="col-xl-4 col-md-6">
+                    <div class="card order-card bg-white h-100 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="icon-wrapper bg-primary bg-opacity-10 text-primary rounded-circle me-3">
+                                    <i class="fas fa-list"></i>
+                                </div>
+                                <h5 class="card-title mb-0">All Orders</h5>
+                            </div>
+                            <p class="card-text text-muted mb-4">
+                                View and manage all customer orders in the system.
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="/Admin/Order/AllOrders" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-eye me-1"></i> View Orders
+                                </a>
+                                <span class="badge bg-primary bg-opacity-10 text-primary">1,248 total</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Track Orders Card -->
+                <div class="col-xl-4 col-md-6">
+                    <div class="card order-card bg-white h-100 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="icon-wrapper bg-success bg-opacity-10 text-success rounded-circle me-3">
+                                    <i class="fas fa-truck"></i>
+                                </div>
+                                <h5 class="card-title mb-0">Track Orders</h5>
+                            </div>
+                            <p class="card-text text-muted mb-4">
+                                Monitor order status and update shipping information.
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="/Admin/Order/TrackOrders" class="btn btn-sm btn-success">
+                                    <i class="fas fa-location-dot me-1"></i> Track
+                                </a>
+                                <span class="badge bg-success bg-opacity-10 text-success">32 in transit</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cancel Requests Card -->
+                <div class="col-xl-4 col-md-6">
+                    <div class="card order-card bg-white h-100 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="icon-wrapper bg-danger bg-opacity-10 text-danger rounded-circle me-3">
+                                    <i class="fas fa-circle-xmark"></i>
+                                </div>
+                                <h5 class="card-title mb-0">Cancel Requests</h5>
+                            </div>
+                            <p class="card-text text-muted mb-4">
+                                Review and process customer cancellation requests.
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="/Admin/Order/CancelRequests" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-clipboard-list me-1"></i> Review
+                                </a>
+                                <span class="badge bg-danger bg-opacity-10 text-danger">14 pending</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity Section -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+            <h5 class="mb-0">
+                <i class="fas fa-history me-2 text-primary"></i>Recent Activity
+            </h5>
+            <button class="btn btn-sm btn-outline-primary" onclick="location.reload()">
+                <i class="fas fa-sync-alt me-1"></i> Refresh
+            </button>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Time</th>
+                            <th>Users</th>
+                            <th>Action</th>
+                            <th>Details</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var activity in Model.RecentActivities)
+                        {
+                            <tr>
+                                <td>@activity.Timestamp.ToString("g")</td>
+                                <td>@(activity.User?.Email ?? "System")</td>
+                                <td>@activity.Action</td>
+                                <td>@activity.Details</td>
+                                <td>
+                                    <span class="badge @GetStatusBadgeClass(activity.Status)">
+                                        @activity.Status.ToString()
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                        @if (!Model.RecentActivities.Any())
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center">No recent activities</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    string GetStatusBadgeClass(MovieMart.Enums.ActivityStatus status)
+    {
+        return status switch
+        {
+            MovieMart.Enums.ActivityStatus.Success => "bg-success",
+            MovieMart.Enums.ActivityStatus.Failed => "bg-danger",
+            MovieMart.Enums.ActivityStatus.Pending => "bg-warning",
+            MovieMart.Enums.ActivityStatus.Processing => "bg-info",
+            _ => "bg-secondary"
+        };
+    }
+}
+
+<style>
+    .dashboard-header {
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+        padding-bottom: 1.5rem;
+    }
+
+    .stat-card {
+        transition: all 0.3s ease;
+        border: none;
+    }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        }
+
+    .management-card {
+        transition: all 0.3s ease;
+        border-radius: 0.5rem;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
+
+        .management-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+    .icon-wrapper {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .user-management-card {
+        transition: all 0.3s ease;
+        border-radius: 0.5rem;
+        border: none;
+    }
+
+        .user-management-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+    .bg-dark-light {
+        background-color: rgba(255,255,255,0.1) !important;
+    }
+
+    .bg-primary-light {
+        background-color: rgba(255,255,255,0.1) !important;
+    }
+
+    .bg-secondary-light {
+        background-color: rgba(255,255,255,0.1) !important;
+    }
+
+    .text-muted-light {
+        color: rgba(255,255,255,0.7) !important;
+    }
+
+    .hover-lift:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .bg-purple {
+        background-color: #6f42c1;
+        color: #6f42c1;
+    }
+
+    .bg-teal {
+        background-color: #20c997;
+        color: #20c997;
+    }
+
+    .order-card {
+        transition: all 0.3s ease;
+        border-radius: 0.5rem;
+    }
+
+        .order-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+    .table th {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+    }
+</style>

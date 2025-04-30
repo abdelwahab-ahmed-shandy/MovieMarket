@@ -1,0 +1,281 @@
+﻿@model MovieMart.Models.ViewModels.EpisodeIndexVM
+@{
+    ViewData["Title"] = "Episodes";
+}
+
+<div class="container py-4">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="fw-bold">
+            <i class="fas fa-film text-primary me-2"></i>Episodes
+        </h1>
+
+    </div>
+
+    <!-- Filter/Search Form -->
+    <div class="card mb-4 border-0 shadow-sm">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">TV Series</label>
+                    <select asp-for="Filter.TvSerieId" class="form-select" onchange="this.form.submit()">
+                        <option value="">All Series</option>
+                        @foreach (var series in Model.Seasons.Select(s => s.TvSeries).Distinct())
+                        {
+                            <option value="@series.Id" selected="@(Model.Filter.TvSerieId == series.Id)">@series.Title</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Season</label>
+                    <select asp-for="Filter.SeasonId" class="form-select" onchange="this.form.submit()">
+                        <option value="">All Seasons</option>
+                        @foreach (var season in Model.Seasons)
+                        {
+                            <option value="@season.Id" selected="@(Model.Filter.SeasonId == season.Id)">
+                                @season.TvSeries.Title - Season @season.SeasonNumber (@season.ReleaseYear)
+                            </option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Sort By</label>
+                    <select asp-for="Filter.SortBy" class="form-select" onchange="this.form.submit()">
+                        <option value="default">Default (Series > Season > Episode)</option>
+                        <option value="title">Title (A-Z)</option>
+                        <option value="title_desc">Title (Z-A)</option>
+                        <option value="episode">Episode (1-9)</option>
+                        <option value="episode_desc">Episode (9-1)</option>
+                        <option value="duration">Duration (Shortest)</option>
+                        <option value="duration_desc">Duration (Longest)</option>
+                        <option value="date">Release Year (Oldest)</option>
+                        <option value="date_desc">Release Year (Newest)</option>
+                        <option value="rating">Rating (Lowest)</option>
+                        <option value="rating_desc">Rating (Highest)</option>
+                    </select>
+                </div>
+                <div class="col-md-8">
+                    <label class="form-label">Search</label>
+                    <div class="input-group">
+                        <input asp-for="Filter.SearchQuery" type="text" class="form-control" placeholder="Search episodes...">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        <a asp-action="Index" class="btn btn-outline-secondary">Reset</a>
+                    </div>
+                </div>
+                <input type="hidden" asp-for="Filter.Page" value="1" />
+            </form>
+        </div>
+    </div>
+
+    <!-- Episodes Grid -->
+    @if (Model.Episodes.Any())
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+            @foreach (var episode in Model.Episodes)
+            {
+                <div class="col">
+                    <div class="card h-100 border-0 shadow-sm rounded-3">
+                        <!-- Thumbnail -->
+                        @* <div class="position-relative"> *@
+                        @*     <img src="@(episode.ThumbnailUrl ?? "https://via.placeholder.com/400x225?text=No+Thumbnail")" *@
+                        @*          class="card-img-top" *@
+                        @*          alt="@episode.Title" *@
+                        @*          style="height: 200px; object-fit: cover;"> *@
+                        @*     <span class="badge bg-dark position-absolute top-0 end-0 m-2"> *@
+                        @*         @episode.Duration.ToString(@"hh\:mm") *@
+                        @*     </span> *@
+                        @* </div> *@
+
+                        <!-- Details -->
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <span class="badge bg-primary mb-1">S@(episode.Season.SeasonNumber)E@(episode.EpisodeNumber)</span>
+                                    <h5 class="card-title mb-0">@episode.Title</h5>
+                                </div>
+                                @if (episode.Rating.HasValue)
+                                {
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="fas fa-star"></i> @episode.Rating?.ToString("0.0")
+                                    </span>
+                                }
+                            </div>
+
+                            <p class="text-muted small mb-2">
+                                <i class="fas fa-tv me-1"></i> @episode.Season.TvSeries.Title
+                            </p>
+
+                            @if (!string.IsNullOrEmpty(episode.Description))
+                            {
+                                <p class="card-text small mb-3">@episode.Description</p>
+                            }
+
+                            <p class="text-muted small mb-0">
+                                <i class="far fa-calendar-alt me-1"></i>
+                                @episode.Season.ReleaseYear
+                            </p>
+                        </div>
+
+                        <!-- Watch Button -->
+                        @if (!string.IsNullOrEmpty(episode.VideoUrl))
+                        {
+                            <div class="card-footer bg-transparent border-0">
+                                <a href="@episode.VideoUrl" class="btn btn-danger w-100">
+                                    <i class="fas fa-play me-2"></i> Watch Now
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Pagination -->
+        @if (Model.TotalPages > 1)
+        {
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item @(Model.Filter.Page == 1 ? "disabled" : "")">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-all-route-data="@(new Dictionary<string, string> {
+                               {"Filter.Page", "1"},
+                               {"Filter.TvSerieId", Model.Filter.TvSerieId?.ToString()},
+                               {"Filter.SeasonId", Model.Filter.SeasonId?.ToString()},
+                               {"Filter.SearchQuery", Model.Filter.SearchQuery},
+                               {"Filter.SortBy", Model.Filter.SortBy}
+                           })">
+                            First
+                        </a>
+                    </li>
+                    <li class="page-item @(Model.Filter.Page == 1 ? "disabled" : "")">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-all-route-data="@(new Dictionary<string, string> {
+                               {"Filter.Page", (Model.Filter.Page - 1).ToString()},
+                               {"Filter.TvSerieId", Model.Filter.TvSerieId?.ToString()},
+                               {"Filter.SeasonId", Model.Filter.SeasonId?.ToString()},
+                               {"Filter.SearchQuery", Model.Filter.SearchQuery},
+                               {"Filter.SortBy", Model.Filter.SortBy}
+                           })">
+                            Previous
+                        </a>
+                    </li>
+
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.Filter.Page ? "active" : "")">
+                            <a class="page-link"
+                               asp-action="Index"
+                               asp-all-route-data="@(new Dictionary<string, string> {
+                                   {"Filter.Page", i.ToString()},
+                                   {"Filter.TvSerieId", Model.Filter.TvSerieId?.ToString()},
+                                   {"Filter.SeasonId", Model.Filter.SeasonId?.ToString()},
+                                   {"Filter.SearchQuery", Model.Filter.SearchQuery},
+                                   {"Filter.SortBy", Model.Filter.SortBy}
+                               })">
+                                @i
+                            </a>
+                        </li>
+                    }
+
+                    <li class="page-item @(Model.Filter.Page == Model.TotalPages ? "disabled" : "")">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-all-route-data="@(new Dictionary<string, string> {
+                               {"Filter.Page", (Model.Filter.Page + 1).ToString()},
+                               {"Filter.TvSerieId", Model.Filter.TvSerieId?.ToString()},
+                               {"Filter.SeasonId", Model.Filter.SeasonId?.ToString()},
+                               {"Filter.SearchQuery", Model.Filter.SearchQuery},
+                               {"Filter.SortBy", Model.Filter.SortBy}
+                           })">
+                            Next
+                        </a>
+                    </li>
+                    <li class="page-item @(Model.Filter.Page == Model.TotalPages ? "disabled" : "")">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-all-route-data="@(new Dictionary<string, string> {
+                               {"Filter.Page", Model.TotalPages.ToString()},
+                               {"Filter.TvSerieId", Model.Filter.TvSerieId?.ToString()},
+                               {"Filter.SeasonId", Model.Filter.SeasonId?.ToString()},
+                               {"Filter.SearchQuery", Model.Filter.SearchQuery},
+                               {"Filter.SortBy", Model.Filter.SortBy}
+                           })">
+                            Last
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        }
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <i class="fas fa-tv fa-4x text-muted mb-3"></i>
+            <h4 class="fw-bold">No Episodes Found</h4>
+            <p class="text-muted">Try adjusting your filters</p>
+            <a asp-action="Index" class="btn btn-primary mt-3">Reset Filters</a>
+        </div>
+    }
+</div>
+
+
+<style>
+    .card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+    .page-item.active .page-link {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Initialize select2
+            $('select').select2({
+                theme: 'bootstrap-5',
+                width: '100%'
+            });
+
+            // Update season dropdown based on selected series
+            $('#Filter_TvSerieId').change(function () {
+                const tvSerieId = $(this).val();
+                const $seasonDropdown = $('#Filter_SeasonId');
+
+                $seasonDropdown.empty().append('<option value="">All Seasons</option>');
+
+                if (tvSerieId) {
+                    $.ajax({
+                        url: '/Episodes/GetSeasonsBySeries', // You should have this endpoint in your controller
+                        method: 'GET',
+                        data: { tvSerieId: tvSerieId },
+                        success: function (seasons) {
+                            $.each(seasons, function (i, season) {
+                                $seasonDropdown.append(
+                                    $('<option></option>')
+                                        .val(season.id)
+                                        .text(`${season.title} - Season ${season.seasonNumber} (${season.releaseYear})`)
+                                );
+                            });
+                            $seasonDropdown.trigger('change.select2');
+                        },
+                        error: function () {
+                            alert('Failed to load seasons.');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

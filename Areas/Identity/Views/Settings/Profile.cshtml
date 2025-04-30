@@ -1,0 +1,255 @@
+﻿@model MovieMart.Models.ViewModels.ProfileVM
+@{
+    ViewData["Title"] = "Profile - MovieMart";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0 rounded-3 overflow-hidden">
+                <!-- Profile Header with Gradient Background -->
+                <div class="profile-header bg-gradient-primary py-4 text-center text-white">
+                    <h2 class="fw-bold mb-0">User Profile</h2>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    <div class="text-center">
+                        <!-- Avatar with Edit Button -->
+                        <div class="position-relative d-inline-block">
+                            <img src="~/Assets/Users/user.png"
+                                 class="rounded-circle img-thumbnail shadow-lg"
+                                 alt="User Avatar"
+                                 width="150"
+                                 height="150" />
+                            <button class="btn btn-sm btn-primary rounded-circle position-absolute bottom-0 end-0 shadow-sm"
+                                    data-bs-toggle="tooltip"
+                                    data-bs-placement="bottom"
+                                    title="Change Avatar">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                        </div>
+
+                        <!-- User Name and Username -->
+                        <h2 class="mt-4 fw-bold">@Model.FirstName @Model.LastName</h2>
+                        <p class="text-muted mb-4">
+                            <i class="fas fa-at"></i> @Model.UserName
+                        </p>
+
+                        <!-- Profile Details -->
+                        <div class="profile-details bg-light rounded-3 p-4 mb-4">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="detail-item mb-3">
+                                        <div class="d-flex align-items-center">
+                                            <div class="icon-circle bg-primary text-white me-3">
+                                                <i class="fas fa-envelope"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0 text-muted small">Email</h6>
+                                                <p class="mb-0 fw-bold">@Model.Email</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="detail-item mb-3">
+                                        <div class="d-flex align-items-center">
+                                            <div class="icon-circle bg-danger text-white me-3">
+                                                <i class="fas fa-map-marker-alt"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0 text-muted small">Address</h6>
+                                                <p class="mb-0 fw-bold">@(string.IsNullOrEmpty(Model.Address) ? "Not specified" : Model.Address)</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex flex-wrap justify-content-center gap-3 mt-4">
+                            <a asp-area="Identity"
+                               asp-controller="Settings"
+                               asp-action="Manage"
+                               class="btn btn-primary px-4 py-2 rounded-pill">
+                                <i class="fas fa-user-edit me-2"></i> Edit Profile
+                            </a>
+
+                            <button class="btn btn-outline-secondary px-4 py-2 rounded-pill"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#changePasswordModal">
+                                <i class="fas fa-key me-2"></i> Change Password
+                            </button>
+
+                            <button class="btn btn-danger px-4 py-2 rounded-pill"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#deleteAccountModal">
+                                <i class="fas fa-trash-alt me-2"></i> Delete Account
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Change Password Modal -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Change Password</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-area="Identity" asp-controller="Settings" asp-action="ChangePassword" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="OldPassword" class="form-label">Current Password</label>
+                        <input type="password" class="form-control" id="OldPassword" name="OldPassword" required>
+                        <span class="text-danger field-validation-valid" data-valmsg-for="OldPassword" data-valmsg-replace="true"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="NewPassword" class="form-label">New Password</label>
+                        <input type="password" class="form-control" id="NewPassword" name="NewPassword" required>
+                        <span class="text-danger field-validation-valid" data-valmsg-for="NewPassword" data-valmsg-replace="true"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ConfirmPassword" class="form-label">Confirm New Password</label>
+                        <input type="password" class="form-control" id="ConfirmPassword" name="ConfirmPassword" required>
+                        <span class="text-danger field-validation-valid" data-valmsg-for="ConfirmPassword" data-valmsg-replace="true"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Delete Account Modal -->
+<div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Delete Account</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Warning:</strong> This action is irreversible. All your data will be permanently deleted.
+                </div>
+                <p>Are you sure you want to delete your account?</p>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="confirmDelete">
+                    <label class="form-check-label" for="confirmDelete">
+                        I understand this action cannot be undone
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <a asp-area="Identity"
+                   asp-controller="Settings"
+                   asp-action="DeleteAccount"
+                   class="btn btn-danger"
+                   id="deleteAccountBtn"
+                   disabled>
+                    <i class="fas fa-trash-alt me-2"></i> Delete Account
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script>
+        // Notification handling
+        $(document).ready(function () {
+            // Read the data stored in TempData and remove the extra spaces
+            var message = '@TempData["notifiction"]'.trim();
+            var messageType = '@TempData["MessageType"]'.trim();
+
+            // Check if there is an actual message to be displayed
+            if (message && message !== 'null' && message !== 'undefined' && message !== '') {
+                // Determine the message type based on its value in TempData
+                switch (messageType.toLowerCase()) {
+                    case 'success':
+                        toastr.success(message, 'Success');
+                        break;
+                    case 'error':
+                        toastr.error(message, 'Error');
+                        break;
+                    case 'warning':
+                        toastr.warning(message, 'Warning');
+                        break;
+                    default:
+                        toastr.info(message, 'Notice');
+                }
+            }
+
+            // Enable delete button only when checkbox is checked
+            document.getElementById('confirmDelete').addEventListener('change', function() {
+                document.getElementById('deleteAccountBtn').disabled = !this.checked;
+            });
+
+            // Initialize tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+
+            // Handle password modal form validation
+            $('#changePasswordModal form').submit(function(e) {
+                if ($('#NewPassword').val() !== $('#ConfirmPassword').val()) {
+                    e.preventDefault();
+                    toastr.error('New password and confirmation password do not match', 'Error');
+                }
+            });
+        });
+    </script>
+
+    <style>
+        .profile-header {
+            background: linear-gradient(135deg, #6c5ce7 0%, #2d3436 100%);
+        }
+
+        .icon-circle {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .detail-item {
+            transition: transform 0.3s ease;
+        }
+
+            .detail-item:hover {
+                transform: translateY(-3px);
+            }
+
+        .rounded-3 {
+            border-radius: 1rem !important;
+        }
+
+        .bg-gradient-primary {
+            background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+        }
+
+        .btn-rounded {
+            border-radius: 50px;
+        }
+    </style>
+}

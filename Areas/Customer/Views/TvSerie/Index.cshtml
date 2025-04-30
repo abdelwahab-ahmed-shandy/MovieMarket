@@ -1,0 +1,151 @@
+﻿@model IEnumerable<TvSeries>
+@{
+    ViewData["Title"] = "TV Series Collection";
+}
+
+<div class="container py-4">
+    <!-- Page Header with Search and Sort -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-5">
+        <h1 class="display-5 fw-bold mb-3 mb-md-0">
+            <i class="fas fa-tv text-primary me-2"></i>TV Series Collection
+        </h1>
+
+        <div class="d-flex flex-column flex-md-row gap-3">
+            <!-- Search Box -->
+            <form method="get" class="mb-3 mb-md-0">
+                <div class="input-group">
+                    <input type="text" name="searchString" class="form-control" placeholder="Search series..."
+                           value="@Context.Request.Query["searchString"]">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Sort Dropdown -->
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="sortDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-sort me-1"></i>
+                    @(Context.Request.Query["sortOrder"].ToString() switch
+                    {
+                        "title_desc" => "Title (Z-A)",
+                        "year_asc" => "Year (Oldest)",
+                        "year_desc" => "Year (Newest)",
+                        "rating_asc" => "Rating (Low)",
+                        "rating_desc" => "Rating (High)",
+                        _ => "Sort By"
+                    })
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="sortDropdown">
+                    <li><a class="dropdown-item" href="?sortOrder=">Default</a></li>
+                    <li><a class="dropdown-item" href="?sortOrder=title_asc">Title (A-Z)</a></li>
+                    <li><a class="dropdown-item" href="?sortOrder=title_desc">Title (Z-A)</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="?sortOrder=year_asc">Release Year (Oldest)</a></li>
+                    <li><a class="dropdown-item" href="?sortOrder=year_desc">Release Year (Newest)</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="?sortOrder=rating_asc">Rating (Low to High)</a></li>
+                    <li><a class="dropdown-item" href="?sortOrder=rating_desc">Rating (High to Low)</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- TV Series Grid -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+        @foreach (var series in Model)
+        {
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm series-card">
+                    <!-- Series Poster -->
+                    <div class="position-relative">
+                        <img src="@(string.IsNullOrEmpty(series.ImgUrl) ?
+                                "https://via.placeholder.com/300x450?text=No+Poster" :
+                                $"~/Assets/Customer/TvSeries/{series.ImgUrl}")"
+                             class="card-img-top"
+                             alt="@series.Title poster"
+                             style="height: 300px; object-fit: cover;"
+                             asp-append-version="true">
+                        @if (series.Rating.HasValue)
+                        {
+                            <div class="position-absolute top-0 end-0 m-2">
+                                <span class="badge bg-warning text-dark p-2">
+                                    <i class="fas fa-star me-1"></i> @series.Rating.Value.ToString("0.0")
+                                </span>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Series Details -->
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold mb-3">@series.Title</h5>
+
+                        <div class="series-meta mb-3">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted"><i class="fas fa-calendar-alt me-2"></i>Year:</span>
+                                <span class="fw-bold">@series.ReleaseYear</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted"><i class="fas fa-user-edit me-2"></i>Author:</span>
+                                <span class="fw-bold">@series.Author</span>
+                            </div>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(series.Description))
+                        {
+                            <p class="card-text series-description">@series.Description</p>
+                        }
+                    </div>
+
+                    <!-- Action Button -->
+                    <div class="card-footer bg-transparent border-0">
+                        <a asp-area="Customer"
+                           asp-controller="Season"
+                           asp-action="AllSeasons"
+                           asp-route-Id="@series.Id"
+                           class="btn btn-primary w-100">
+                            <i class="fas fa-list-ol me-2"></i>View Seasons
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+    <style>
+        .series-card {
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+            .series-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            }
+
+        .series-meta {
+            background-color: #f8f9fa;
+            padding: 0.75rem;
+            border-radius: 6px;
+        }
+
+        .series-description {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 4.5em;
+        }
+
+        .dropdown-toggle::after {
+            margin-left: 0.5em;
+        }
+
+        .badge.bg-warning {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>

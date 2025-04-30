@@ -1,0 +1,27 @@
+﻿@model Movie
+
+<div class="card mb-3 border-0 shadow-sm h-100">
+    <div class="row g-0">
+        <div class="col-md-4">
+            <img src="~/Assets/Customer/MoviesPhoto/@Model.ImgUrl" class="img-fluid rounded-start" alt="@Model.Title" style="height: 150px; object-fit: cover;">
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">@Model.Title</h5>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="badge bg-primary">@Model.Category.Name</span>
+                    <span class="text-warning">
+                        <i class="fas fa-star"></i> @(Model.Rating?.ToString("0.0") ?? "N/A")
+                    </span>
+                </div>
+                <p class="card-text small text-muted">@Model.Description</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="text-success fw-bold">@Model.Price.ToString("C")</span>
+                    <a asp-controller="Movie" asp-action="MoreDetils" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-primary">
+                        View
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

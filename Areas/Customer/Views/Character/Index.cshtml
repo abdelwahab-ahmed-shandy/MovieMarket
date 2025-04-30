@@ -1,0 +1,103 @@
+﻿@model IEnumerable<Character>
+@{
+    ViewData["Title"] = "TV & Movie Characters";
+    bool hasCharacters = Model != null && Model.Any();
+}
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-primary mb-3">
+            <i class="fas fa-users me-2"></i>TV & Movie Characters
+        </h1>
+        <p class="lead text-muted">Explore your favorite characters from films and television</p>
+    </div>
+
+    @if (!hasCharacters)
+    {
+        <div class="alert alert-info text-center py-4">
+            <i class="fas fa-user-slash fa-3x mb-3"></i>
+            <h4 class="alert-heading">No Characters Found</h4>
+            <p>We couldn't find any characters in our database.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+            @foreach (var item in Model)
+            {
+                <div class="col">
+                    <div class="card h-100 border-0 rounded-4 shadow-sm character-card">
+                       
+                        @* <div class="card-img-top character-image-container"> *@
+                        @*     <img src="/images/default-character.jpg" *@
+                        @*          class="img-fluid rounded-top-4" *@
+                        @*          alt="@item.Name" *@
+                        @*          loading="lazy"> *@
+                        @* </div> *@
+                        
+                        <div class="card-body d-flex flex-column">
+                            <h3 class="h5 fw-bold text-dark mb-2">
+                                <i class="fas fa-user me-2"></i>@item.Name
+                            </h3>
+                            <p class="card-text text-muted flex-grow-1">
+                                @if (!string.IsNullOrEmpty(item.Description))
+                                {
+                                    @(item.Description.Length > 150 ? item.Description.Substring(0, 150) + "..." : item.Description)
+                                }
+                                else
+                                {
+                                    <span class="text-muted fst-italic">No description available</span>
+                                }
+                            </p>
+                            <div class="mt-3">
+                                <a asp-area="Customer" asp-controller="Character" asp-action="Details" asp-route-Id="@item.Id"
+                                   class="btn btn-primary w-100 rounded-pill fw-bold">
+                                    <i class="fas fa-info-circle me-2"></i>View Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    .character-card {
+        transition: all 0.3s ease;
+    }
+
+        .character-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+    .character-image-container {
+        height: 200px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f8f9fa;
+    }
+
+        .character-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+    .character-card:hover .character-image-container img {
+        transform: scale(1.05);
+    }
+
+    .card-text {
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: 6rem;
+    }
+</style>
