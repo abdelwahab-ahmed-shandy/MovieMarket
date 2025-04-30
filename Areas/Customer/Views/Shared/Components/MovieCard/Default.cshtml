@@ -1,0 +1,58 @@
+﻿@model Movie
+
+<div class="card h-100 border-0 shadow-sm movie-card">
+    <div class="position-relative">
+        <img src="~/Assets/Customer/MoviesPhoto/@Model.ImgUrl" class="card-img-top movie-poster" alt="@Model.Title">
+        <div class="movie-badge bg-primary text-white">
+            @Model.Category.Name
+        </div>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title mb-1">@Model.Title</h5>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="text-muted small">@Model.ReleaseYear</span>
+            <span class="badge bg-warning text-dark">
+                @(Model.Rating?.ToString("0.0") ?? "N/A") ⭐
+            </span>
+        </div>
+        <p class="card-text text-muted small mb-3">@Model.Description</p>
+        <div class="d-flex justify-content-between align-items-center">
+            <span class="text-success fw-bold">@Model.Price.ToString("C")</span>
+            <a asp-action="MoreDetails" asp-route-id="@Model.Id" class="btn btn-sm btn-primary">
+                Details <i class="fas fa-chevron-right ms-1"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .movie-card {
+        transition: all 0.3s ease;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+        .movie-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+    .movie-poster {
+        height: 300px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .movie-card:hover .movie-poster {
+        transform: scale(1.05);
+    }
+
+    .movie-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 0.8rem;
+    }
+</style>

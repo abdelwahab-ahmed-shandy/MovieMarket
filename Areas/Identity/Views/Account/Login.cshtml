@@ -1,0 +1,254 @@
+﻿@section Styles {
+    <style>
+        /* Custom Styles */
+        .bg-gradient-primary-to-secondary {
+            background: linear-gradient(135deg, #6c5ce7 0%, #fd79a8 100%);
+        }
+
+        .password-toggle {
+            z-index: 5;
+            color: var(--bs-secondary);
+        }
+
+        .card {
+            border: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(108, 92, 231, 0.25);
+        }
+
+        /* Animation for form elements */
+        .form-floating {
+            transition: all 0.3s ease;
+        }
+
+            .form-floating:focus-within {
+                transform: translateY(-2px);
+            }
+    </style>
+}
+
+@model MovieMart.Models.ViewModels.LoginVM
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<main class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                <!-- Card Header with Gradient Background -->
+                <div class="card-header bg-gradient-primary-to-secondary text-white py-4">
+                    <div class="d-flex align-items-center justify-content-center">
+                        <i class="bi bi-film fs-1 me-3"></i>
+                        <div>
+                            <h2 class="mb-0 text-center fw-bold">Welcome to MovieMart</h2>
+                            <p class="mb-0 text-center opacity-75">Your ultimate movie experience</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Card Body -->
+                <div class="card-body p-4 p-md-5">
+                    <!-- Login Form -->
+                    <form asp-action="Login" id="loginForm" class="needs-validation" novalidate>
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4"></div>
+
+                        <!-- Email Field with Animation -->
+                        <div class="form-floating mb-4">
+                            <input asp-for="Email" type="email" class="form-control" 
+                                   placeholder="name@example.com"/>
+                            <label asp-for="Email" class="form-label"></label>
+                            <div class="invalid-feedback">
+                                Please enter a valid email address
+                            </div>
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Password Field with Toggle -->
+                        <div class="form-floating mb-4 position-relative">
+                            <input asp-for="Password" type="password" class="form-control" 
+                                   placeholder="Password" required
+                                   minlength="6" />
+                            <label asp-for="Password" class="form-label"></label>
+                            <button type="button" class="btn btn-sm btn-link position-absolute end-0 top-50 translate-middle-y me-2 password-toggle">
+                                <i class="bi bi-eye-fill"></i>
+                            </button>
+                            <div class="invalid-feedback">
+                                Password must be at least 6 characters
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Remember Me & Forgot Password -->
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" asp-for="RememberMe" />
+                                <label class="form-check-label" asp-for="RememberMe">Remember Me</label>
+                            </div>
+                            <a href="/Identity/Account/ForgetPassword" class="text-decoration-none small text-primary">Forgot Password?</a>
+                        </div>
+
+                        <!-- Submit Button with Loading Animation -->
+                        <div class="d-grid mb-4">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold py-3">
+                                <span class="submit-text">
+                                    <i class="bi bi-box-arrow-in-right me-2"></i> Login
+                                </span>
+                                <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Register Link -->
+                    <div class="text-center mb-4">
+                        <p class="text-muted mb-2">New to MovieMart?</p>
+                        <a asp-area="Identity" asp-controller="Account" asp-action="Register"
+                           class="btn btn-outline-primary rounded-pill px-4">
+                            Create your account
+                        </a>
+                    </div>
+
+                    <!-- Social Login Divider -->
+                    <div class="position-relative my-4">
+                        <hr class="border-2">
+                        <div class="position-absolute top-50 start-50 translate-middle bg-white px-3">
+                            <span class="text-muted small">OR CONNECT WITH</span>
+                        </div>
+                    </div>
+
+                    <!-- Social Login Buttons -->
+                    <div class="row g-3">
+                        <!-- Google Login -->
+                        <div class="col-md-6">
+                            <form asp-action="ExternalLogin" asp-controller="Account" method="post">
+                                <input type="hidden" name="provider" value="Google" />
+                                <input type="hidden" name="returnUrl" value="/" />
+                                <button type="submit" class="btn btn-outline-danger w-100 rounded-pill py-2">
+                                    <i class="fab fa-google me-2"></i> Google
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- GitHub Login -->
+                        <div class="col-md-6">
+                            <form asp-action="ExternalLogin" method="post">
+                                <input type="hidden" name="provider" value="GitHub" />
+                                <button type="submit" class="btn btn-dark w-100 rounded-pill py-2">
+                                    <i class="fab fa-github me-2"></i> GitHub
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Facebook Login (Optional) -->
+                        <div class="col-md-6">
+                            <form asp-action="ExternalLogin" method="post">
+                                <input type="hidden" name="provider" value="Facebook" />
+                                <button type="submit" class="btn btn-primary w-100 rounded-pill py-2">
+                                    <i class="fab fa-facebook-f me-2"></i> Facebook
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Twitter Login (Optional) -->
+                        <div class="col-md-6">
+                            <form asp-action="ExternalLogin" method="post">
+                                <input type="hidden" name="provider" value="Twitter" />
+                                <button type="submit" class="btn btn-info text-white w-100 rounded-pill py-2">
+                                    <i class="fab fa-twitter me-2"></i> Twitter
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            // Password toggle functionality
+            $('.password-toggle').click(function() {
+                const passwordInput = $(this).siblings('input');
+                const icon = $(this).find('i');
+
+                if (passwordInput.attr('type') === 'password') {
+                    passwordInput.attr('type', 'text');
+                    icon.removeClass('bi-eye-fill').addClass('bi-eye-slash-fill');
+                } else {
+                    passwordInput.attr('type', 'password');
+                    icon.removeClass('bi-eye-slash-fill').addClass('bi-eye-fill');
+                }
+            });
+
+            // Form validation
+            (function() {
+                'use strict';
+
+                const form = document.getElementById('loginForm');
+
+                form.addEventListener('submit', function(event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    } else {
+                        // Show loading spinner
+                        const submitBtn = form.querySelector('button[type="submit"]');
+                        submitBtn.querySelector('.submit-text').classList.add('d-none');
+                        submitBtn.querySelector('.spinner-border').classList.remove('d-none');
+                        submitBtn.disabled = true;
+                    }
+
+                    form.classList.add('was-validated');
+                }, false);
+            })();
+
+            // Toastr notifications
+            var message = '@TempData["notification"]'.trim();
+            var messageType = '@TempData["MessageType"]';
+
+            if (message && message !== 'null' && message !== 'undefined' && message !== '') {
+                messageType = messageType ? messageType.trim().toLowerCase() : 'info';
+
+                const toastrOptions = {
+                    closeButton: true,
+                    progressBar: true,
+                    positionClass: "toast-top-right",
+                    timeOut: 5000,
+                    extendedTimeOut: 2000
+                };
+
+                switch (messageType) {
+                    case 'success':
+                        toastr.success(message, 'Success', toastrOptions);
+                        break;
+                    case 'error':
+                        toastr.error(message, 'Error', toastrOptions);
+                        break;
+                    case 'warning':
+                        toastr.warning(message, 'Warning', toastrOptions);
+                        break;
+                    default:
+                        toastr.info(message, 'Information', toastrOptions);
+                }
+            }
+        });
+    </script>
+}
+

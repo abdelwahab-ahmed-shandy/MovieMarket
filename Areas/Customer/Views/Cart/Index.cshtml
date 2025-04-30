@@ -1,0 +1,183 @@
+﻿@model List<Cart>
+@{
+    ViewData["Title"] = "Your Shopping Cart";
+    bool hasItems = Model != null && Model.Any();
+}
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="fw-bold mb-4 text-primary">
+                <i class="fas fa-shopping-cart me-2"></i> Your Cart
+            </h2>
+
+            <div class="d-flex justify-content-between mb-4">
+                <a href="/Customer/Movie" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left me-2"></i> Continue Shopping
+                </a>
+                @if (hasItems)
+                {
+                    <span class="badge bg-secondary fs-6">
+                        @Model.Count @(Model.Count == 1 ? "item" : "items")
+                    </span>
+                }
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    @if (hasItems)
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <div class="row align-items-center border-bottom pb-4 mb-4">
+                                <!-- Movie Image -->
+                                <div class="col-md-2 mb-3 mb-md-0">
+                                    <img src="~/Assets/Customer/MoviesPhoto/@item.Movie.ImgUrl"
+                                         class="img-fluid rounded-3 shadow-sm"
+                                         alt="@item.Movie.Title"
+                                         style="max-height: 150px; width: auto;">
+                                </div>
+
+                                <!-- Movie Details -->
+                                <div class="col-md-5">
+                                    <h5 class="fw-bold text-dark">@item.Movie.Title</h5>
+                                    <p class="text-muted mb-2">
+                                        <i class="fas fa-film me-2"></i> @item.Cinema.Name
+                                    </p>
+                                    <p class="text-muted small mb-0">
+                                        @(item.Movie.Description != null && item.Movie.Description.Length > 100 ?
+                                            item.Movie.Description.Substring(0, 100) + "..." : item.Movie.Description)
+                                    </p>
+                                </div>
+
+                                <!-- Quantity Controls -->
+                                <div class="col-md-3">
+                                    <div class="d-flex align-items-center">
+                                        <a href="/Customer/Cart/Decrement?movieId=@item.Movie.Id"
+                                           class="btn btn-outline-secondary px-3 py-1">
+                                            <i class="fas fa-minus"></i>
+                                        </a>
+
+                                        <span class="mx-3 fw-bold fs-5">@item.Count</span>
+
+                                        <a href="/Customer/Cart/Increment?movieId=@item.Movie.Id"
+                                           class="btn btn-outline-secondary px-3 py-1">
+                                            <i class="fas fa-plus"></i>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <!-- Price & Remove -->
+                                <div class="col-md-2 text-md-end mt-3 mt-md-0">
+                                    <div class="d-flex flex-column align-items-md-end">
+                                        <span class="fw-bold fs-5 text-success mb-2">
+                                            @((item.Movie.Price * item.Count).ToString("C"))
+                                        </span>
+                                        <a href="/Customer/Cart/DeleteOnCart?movieId=@item.Movie.Id&cinemaId=@item.Cinema.Id"
+                                           class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash-alt me-1"></i> Remove
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <!-- Order Summary -->
+                        <div class="row mt-5">
+                            <div class="col-md-4 offset-md-8">
+                                <div class="card bg-light border-0">
+                                    <div class="card-body">
+                                        <h5 class="card-title fw-bold mb-4">Order Summary</h5>
+
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Subtotal:</span>
+                                            <span>@(ViewBag.Total?.ToString("C") ?? "N/A")</span>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between mb-3">
+                                            <span>Tax:</span>
+                                            <span>@(ViewBag.Tax?.ToString("C") ?? "N/A")</span>
+                                        </div>
+
+                                        <hr>
+
+                                        <div class="d-flex justify-content-between fw-bold fs-5 mb-4">
+                                            <span>Total:</span>
+                                            <span class="text-primary">@(ViewBag.Total?.ToString("C") ?? "N/A")</span>
+                                        </div>
+
+                                        <a href="/Customer/Cart/Pay"
+                                           class="btn btn-primary w-100 py-2 fw-bold">
+                                            <i class="fas fa-credit-card me-2"></i> Proceed to Checkout
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="fas fa-shopping-cart fa-4x text-muted mb-4"></i>
+                            <h4 class="fw-bold text-muted">Your cart is empty</h4>
+                            <p class="text-muted">Start adding some amazing movies!</p>
+                            <a href="/Customer/Movie" class="btn btn-primary mt-3">
+                                <i class="fas fa-film me-2"></i> Browse Movies
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Read the data stored in TempData and remove the extra spaces
+            var message = '@TempData["notifiction"]'.trim();
+            var messageType = '@TempData["MessageType"]'.trim();
+
+            // Check if there is an actual message to be displayed
+            if (message && message !== 'null' && message !== 'undefined' && message !== '') {
+                // Determine the message type based on its value in TempData
+                switch (messageType.toLowerCase()) {
+                    case 'success': // If the message indicates a successful operation
+                        toastr.success(message, 'Success');
+                        break;
+                    case 'error': // If the message indicates an error
+                        toastr.error(message, 'Error');
+                        break;
+                    case 'warning': // If the message is a warning
+                        toastr.warning(message, 'Warning');
+                        break;
+                    default: // Any other status is displayed as public information
+                        toastr.info(message, 'Notice');
+                }
+            }
+        });
+    </script>
+}
+
+<style>
+    .quantity-controls .btn {
+        width: 38px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .card {
+        transition: all 0.3s ease;
+    }
+
+        .card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+    .btn-outline-danger:hover {
+        color: #fff !important;
+    }
+</style>

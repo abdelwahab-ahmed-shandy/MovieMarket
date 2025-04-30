@@ -1,0 +1,122 @@
+﻿@model IEnumerable<Season>
+@{
+    ViewData["Title"] = "Seasons";
+}
+
+<div class="container py-4">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="display-4 fw-bold">
+            <i class="fas fa-list-ol text-primary me-2"></i>All Seasons
+        </h1>
+        @* <div class="dropdown"> *@
+        @*     <button class="btn btn-outline-primary dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false"> *@
+        @*         <i class="fas fa-sort me-2"></i>Sort By *@
+        @*     </button> *@
+        @*     <ul class="dropdown-menu" aria-labelledby="sortDropdown"> *@
+        @*         <li><a class="dropdown-item" href="#">Newest First</a></li> *@
+        @*         <li><a class="dropdown-item" href="#">Oldest First</a></li> *@
+        @*         <li><a class="dropdown-item" href="#">Season Number</a></li> *@
+        @*         <li><a class="dropdown-item" href="#">TV Series</a></li> *@
+        @*     </ul> *@
+        @* </div> *@
+    </div>
+
+    <!-- Seasons Grid -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        @foreach (var season in Model)
+        {
+            <div class="col">
+                <div class="card h-100 border-0 shadow-lg season-card">
+                    <!-- Season Header -->
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0 text-center">Season @season.SeasonNumber</h3>
+                    </div>
+
+                    <!-- Season Body -->
+                    <div class="card-body">
+                        
+                        @* <div class="text-center mb-3"> *@
+                        @*     <img src="@(season.TvSeries.ImgUrl ?? "https://via.placeholder.com/300x450?text=No+Poster")" *@
+                        @*          class="img-fluid rounded mb-3" *@
+                        @*          alt="@season.TvSeries.Title poster" *@
+                        @*          style="max-height: 200px; object-fit: contain;"> *@
+                        @* </div> *@
+
+                        <h4 class="card-title text-center fw-bold">@season.Title</h4>
+
+                        <div class="season-meta mt-4">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted"><i class="fas fa-calendar-alt me-2"></i>Year:</span>
+                                <span class="fw-bold">@season.ReleaseYear</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted"><i class="fas fa-tv me-2"></i>Series:</span>
+                                <span class="fw-bold text-truncate" style="max-width: 150px;">@season.TvSeries.Title</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted"><i class="fas fa-user-edit me-2"></i>Author:</span>
+                                <span class="fw-bold">@season.TvSeries.Author</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card Footer -->
+                    <div class="card-footer bg-transparent border-0 d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+                        <a asp-area="Customer"
+                           asp-controller="Episode"
+                           asp-action="AllEpisode"
+                           asp-route-Id="@season.Id"
+                           class="btn btn-primary flex-grow-1 w-100">
+                            <i class="fas fa-play-circle me-2"></i>View Episodes 
+                        </a>
+
+                        <div class="rating-badge">
+                            <span class="badge bg-warning text-dark">
+                                <i class="fas fa-star"></i> @(season.TvSeries.Rating)
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+    <style>
+        .season-card {
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+            .season-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            }
+
+        .card-header {
+            font-size: 1.25rem;
+            font-weight: 600;
+            padding: 1rem;
+        }
+
+        .season-meta {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .rating-badge {
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            transition: all 0.3s ease;
+        }
+
+            .btn-primary:hover {
+                transform: scale(1.02);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+    </style>

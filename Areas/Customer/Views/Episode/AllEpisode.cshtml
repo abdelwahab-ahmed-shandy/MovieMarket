@@ -1,0 +1,109 @@
+﻿@model SeasonEpisodesVM
+@{
+    ViewData["Title"] = "";
+}
+
+
+<div class="container py-4">
+    <!-- Season Header -->
+    <div class="season-header mb-5 text-center">
+        <h1 class="display-4 fw-bold">@Model.TvSeriesTitle</h1>
+        <h2 class="text-muted">Season @Model.SeasonNumber <span class="badge bg-primary">@Model.ReleaseYear</span></h2>
+        <p class="lead">@Model.Season.TvSeries.Description</p>
+    </div>
+
+    <!-- Episodes Grid -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        @foreach (var episode in Model.Episodes)
+        {
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm episode-card">
+                    
+                    <!-- Episode Thumbnail -->
+                    @* <div class="position-relative"> *@
+                    @*     <img src="@(episode.ThumbnailUrl ?? "https://via.placeholder.com/400x225?text=No+Thumbnail")" *@
+                    @*          class="card-img-top" *@
+                    @*          alt="@episode.Title" *@
+                    @*          style="height: 200px; object-fit: cover;"> *@
+                    @*     <span class="badge bg-dark position-absolute top-0 end-0 m-2"> *@
+                    @*         @episode.Duration.ToString(@"hh\:mm") *@
+                    @*     </span> *@
+                    @* </div> *@
+
+                    <!-- Episode Details -->
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="badge bg-primary">Episode @episode.EpisodeNumber</span>
+                            @if (episode.Rating.HasValue)
+                            {
+                                <span class="badge bg-warning text-dark">
+                                    <i class="fas fa-star"></i> @episode.Rating.Value.ToString("0.0")
+                                </span>
+                            }
+                        </div>
+
+                        <h5 class="card-title mb-3">@episode.Title</h5>
+
+                        @if (!string.IsNullOrEmpty(episode.Description))
+                        {
+                            <p class="card-text text-muted episode-description">@episode.Description</p>
+                        }
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="card-footer bg-transparent border-0 d-flex justify-content-between">
+                        <small class="text-muted">
+                            <i class="far fa-calendar-alt me-1"></i>
+                            @episode.Season.ReleaseYear
+                        </small>
+
+                        @if (!string.IsNullOrEmpty(episode.VideoUrl))
+                        {
+                            <a href="@episode.VideoUrl" class="btn btn-sm btn-danger">
+                                <i class="fas fa-play me-1"></i> Watch
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .season-header {
+        background: linear-gradient(rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.03));
+        padding: 2rem;
+        border-radius: 10px;
+    }
+
+    .episode-card {
+        transition: all 0.3s ease;
+    }
+
+        .episode-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+    .episode-description {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: 4.5em;
+    }
+
+    .badge.bg-primary {
+        background-color: #0d6efd !important;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        // Initialize tooltips if needed
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+}

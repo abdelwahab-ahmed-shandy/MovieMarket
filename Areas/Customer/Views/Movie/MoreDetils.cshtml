@@ -1,0 +1,173 @@
+﻿@model Movie
+@{
+    ViewData["Title"] = "More Movie Details";
+    var cinemas = ViewBag.Cinemas as List<Cinema>;
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card border-0 rounded-4 overflow-hidden shadow-lg">
+                <div class="row g-0">
+                    <!-- Movie Poster Column -->
+                    <div class="col-lg-5">
+                        <div class="movie-poster-container position-relative h-100">
+                            <img src="~/Assets/Customer/MoviesPhoto/@Model.ImgUrl"
+                                 class="img-fluid h-100 w-100 object-fit-cover"
+                                 alt="@Model.Title"
+                                 loading="lazy">
+                            <span class="category-badge bg-primary text-white position-absolute top-0 end-0 m-3">
+                                @Model.Category.Name
+                            </span>
+                            <div class="rating-badge position-absolute bottom-0 start-0 m-3">
+                                <span class="bg-dark text-warning px-3 py-2 rounded-3 fw-bold">
+                                    @(Model.Rating?.ToString("0.0") ?? "N/A") <i class="fas fa-star"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Movie Details Column -->
+                    <div class="col-lg-7">
+                        <div class="card-body p-4 p-lg-5 h-100 d-flex flex-column">
+                            <h1 class="display-5 fw-bold text-dark mb-3">@Model.Title</h1>
+
+                            <div class="d-flex flex-wrap gap-2 mb-4">
+                                <span class="badge bg-secondary bg-opacity-10 text-secondary">
+                                    <i class="fas fa-calendar-alt me-2"></i>@Model.ReleaseYear
+                                </span>
+                                <span class="badge bg-secondary bg-opacity-10 text-secondary">
+                                    <i class="fas fa-clock me-2"></i>@Model.Duration
+                                </span>
+                                <span class="badge bg-secondary bg-opacity-10 text-secondary">
+                                    <i class="fas fa-user-tie me-2"></i>@Model.Author
+                                </span>
+                            </div>
+
+                            <p class="lead text-muted mb-4">@Model.Description</p>
+
+                            <div class="movie-details mb-4">
+                                <div class="d-flex justify-content-between py-2 border-bottom">
+                                    <span class="text-muted fw-semibold">Category</span>
+                                    <span>@Model.Category.Name</span>
+                                </div>
+                                <div class="d-flex justify-content-between py-2 border-bottom">
+                                    <span class="text-muted fw-semibold">Price per ticket</span>
+                                    <span class="text-success fw-bold">@Model.Price.ToString("C")</span>
+                                </div>
+                            </div>
+
+                            <form action="/Customer/Cart/AddToCart" method="post" class="mt-auto">
+                                <input type="hidden" name="MovieId" value="@Model.Id" />
+
+                                <div class="mb-4">
+                                    <label for="CinemaId" class="form-label fw-bold">
+                                        <i class="fas fa-film me-2"></i>Select Cinema
+                                    </label>
+                                    <select name="CinemaId" id="CinemaId" class="form-select form-select-lg py-3" required>
+                                        <option value="" disabled selected>-- Choose Cinema Location --</option>
+                                        @foreach (var cinema in cinemas)
+                                        {
+                                            <option value="@cinema.Id">@cinema.Name - @cinema.Location</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="count" class="form-label fw-bold">
+                                        <i class="fas fa-ticket-alt me-2"></i>Number of Tickets
+                                    </label>
+                                    <div class="input-group">
+                                        <button type="button" class="btn btn-outline-secondary decrement-btn" onclick="decrementTicket()">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <input type="number" name="count" id="count"
+                                               class="form-control text-center"
+                                               min="1" max="10" value="1" required>
+                                        <button type="button" class="btn btn-outline-secondary increment-btn" onclick="incrementTicket()">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary btn-lg w-100 py-3 fw-bold">
+                                    <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .movie-poster-container {
+        min-height: 500px;
+        background-color: #f8f9fa;
+        overflow: hidden;
+    }
+
+    .category-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 2rem;
+        font-size: 0.9rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .rating-badge {
+        font-size: 1.2rem;
+    }
+
+    .movie-details {
+        background-color: rgba(var(--bs-light-rgb), 0.3);
+        border-radius: 0.5rem;
+        padding: 1rem;
+    }
+
+    .form-select, .form-control {
+        border-radius: 0.5rem !important;
+    }
+
+    .input-group button {
+        width: 3rem;
+    }
+
+    .btn-primary {
+        transition: all 0.3s ease;
+        background-image: linear-gradient(to right, #4e54c8, #8f94fb);
+        border: none;
+    }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+    .movie-poster-container img {
+        transition: transform 0.5s ease;
+    }
+
+    .movie-poster-container:hover img {
+        transform: scale(1.05);
+    }
+</style>
+
+@section Scripts {
+    <script>
+        function incrementTicket() {
+            const input = document.getElementById('count');
+            if (parseInt(input.value) < 10) {
+                input.value = parseInt(input.value) + 1;
+            }
+        }
+
+        function decrementTicket() {
+            const input = document.getElementById('count');
+            if (parseInt(input.value) > 1) {
+                input.value = parseInt(input.value) - 1;
+            }
+        }
+    </script>
+}

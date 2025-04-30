@@ -1,0 +1,120 @@
+﻿@section Scripts
+{
+<script>
+    $(document).ready(function () {
+        // Read the data stored in TempData and remove the extra spaces
+        var message = '@TempData["Message"]'.trim();
+        var messageType = '@TempData["MessageType"]'.trim();
+
+        // Check if there is an actual message to be displayed
+        if (message && message !== 'null' && message !== 'undefined' && message !== '') {
+            // Determine the message type based on its value in TempData
+            switch (messageType?.toLowerCase()) {
+                case 'success':
+                    toastr.success(message, 'Success');
+                    break;
+                case 'error':
+                    toastr.error(message, 'Error');
+                    break;
+                case 'warning':
+                    toastr.warning(message, 'Warning'); 
+                    break;
+                default:
+                    toastr.info(message, 'Notice'); 
+            }
+        }
+    });
+</script>
+}
+
+@model IEnumerable<ApplicationUser>
+@{
+    ViewData["Title"] = "All Customers";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-center text-muted">Users Management</h2>
+
+    <!-- Control buttons -->
+    <div class="d-flex justify-content-between mb-3">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-home"></i> Back to Home
+        </a>
+        <a asp-action="Create" class="btn btn-sm bg-gradient text-white shadow-sm" style="background-color: #6f42c1; border-color: #6f42c1;">
+            <i class="fas fa-plus-circle"></i> Add New Customer
+        </a>
+    </div>
+
+
+    <!-- Search Bar -->
+    <div class="row mb-4">
+        <div class="col-12 d-sm-flex justify-content-center">
+            <form class="input-group w-50" method="get" action="@Url.Action("AllCustomers", "Customers")">
+                <input type="text" class="form-control" id="query" name="query" placeholder="Search users..." value="@Context.Request.Query["query"]" />
+                <button class="btn btn-primary" type="submit">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+            <thead class="table-dark text-center">
+                <tr>
+                    <th>ID</th>
+                    <th>Full Name</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Address</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody class="text-center align-middle">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Id</td>
+                        <td>@item.FirstName @item.LastName</td>
+                        <td>@item.FirstName</td>
+                        <td>@item.LastName</td>
+                        <td>@item.Email</td>
+                        <td>@item.Address</td>
+                        <td>
+                            <div class="btn-group btn-group-sm" role="group">
+                                @if (item.IsBlocked)
+                                {
+                                    <a asp-action="Unblock" asp-route-id="@item.Id" class="btn btn-success me-1">
+                                        <i class="fas fa-user-check"></i> Unblock
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a asp-action="Block" asp-route-id="@item.Id" class="btn btn-warning me-1">
+                                        <i class="fas fa-user-slash"></i> Block
+                                    </a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="row">
+        <nav aria-label="...">
+            <ul class="pagination">
+                @for (int i = 1; i <= ViewBag.totalPages; i++)
+                {
+                    <li class="page-item @(i == ViewBag.currentPage ? "active" : "")">
+                        <a class="page-link" href="/Admin/Customers/AllCustomers?page=@i">@i</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+</div>

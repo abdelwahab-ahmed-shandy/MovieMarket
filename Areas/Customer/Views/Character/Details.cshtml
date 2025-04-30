@@ -1,0 +1,196 @@
+﻿@model Character
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="container py-5">
+    <div class="row">
+        <!-- Character Header Section -->
+        <div class="col-12 mb-5">
+            <div class="d-flex flex-column flex-md-row align-items-center">
+                <div class="me-md-4 mb-3 mb-md-0">
+                   
+                    @* <img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "/images/default-character.jpg" : Model.ImageUrl)" *@
+                    @*      class="img-fluid rounded-4 shadow" *@
+                    @*      alt="@Model.Name" *@
+                    @*      style="max-height: 300px; width: auto;"> *@
+
+                </div>
+                <div class="flex-grow-1">
+                    <h1 class="display-5 fw-bold text-dark mb-3">
+                        <i class="fas fa-user me-2"></i>@Model.Name
+                    </h1>
+                    <p class="lead text-muted mb-4">
+                        @if (!string.IsNullOrEmpty(Model.Description))
+                        {
+                            @Model.Description
+                        }
+                        else
+                        {
+                            <span class="text-muted fst-italic">No description available</span>
+                        }
+                    </p>
+                    <div class="d-flex flex-wrap gap-2">
+                        @if (Model.CharacterMovies.Any())
+                        {
+                            <span class="badge bg-primary bg-opacity-10 text-primary">
+                                <i class="fas fa-film me-1"></i> @Model.CharacterMovies.Count Movies
+                            </span>
+                        }
+                        @if (Model.CharacterTvSeries.Any())
+                        {
+                            <span class="badge bg-success bg-opacity-10 text-success">
+                                <i class="fas fa-tv me-1"></i> @Model.CharacterTvSeries.Count TV Series
+                            </span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appearances Section -->
+        <div class="col-12">
+            <h2 class="fw-bold mb-4 pb-2 border-bottom">
+                <i class="fas fa-star me-2"></i>Appearances
+            </h2>
+
+            <!-- Movies Section -->
+            @if (Model.CharacterMovies.Any())
+            {
+                <div class="mb-5">
+                    <h3 class="h4 fw-bold text-primary mb-4">
+                        <i class="fas fa-film me-2"></i>Movies
+                    </h3>
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                        @foreach (var movie in Model.CharacterMovies.Select(cm => cm.Movie))
+                        {
+                            <div class="col">
+                                <div class="card h-100 border-0 shadow-sm appearance-card">
+                                    <div class="card-img-top appearance-image-container">
+                                        
+                                        @* <img src="~/Assets/Customer/MoviesPhoto/@movie.ImgUrl" *@
+                                        @*      class="img-fluid rounded-top" *@
+                                        @*      alt="@movie.Title"> *@
+
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title fw-bold">@movie.Title</h5>
+                                        <div class="d-flex flex-wrap gap-2 mb-3">
+                                            <span class="badge bg-secondary bg-opacity-10 text-secondary">
+                                                @movie.Category.Name
+                                            </span>
+                                            <span class="badge bg-secondary bg-opacity-10 text-secondary">
+                                                @movie.ReleaseYear
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer bg-transparent border-0 d-flex gap-2">
+                                        <a asp-area="Customer" asp-controller="Movie" asp-action="MoreDetils" asp-route-Id="@movie.Id"
+                                           class="btn btn-sm btn-primary flex-grow-1">
+                                            <i class="fas fa-info-circle me-1"></i>Details
+                                        </a>
+                                        <a asp-area="Customer" asp-controller="Category" asp-action="MoreMovieWithCategory" asp-route-Id="@movie.CategoryId"
+                                           class="btn btn-sm btn-outline-secondary">
+                                            <i class="fas fa-tags me-1"></i>Category
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            <!-- TV Series Section -->
+            @if (Model.CharacterTvSeries.Any())
+            {
+                <div class="mb-5">
+                    <h3 class="h4 fw-bold text-primary mb-4">
+                        <i class="fas fa-tv me-2"></i>TV Series
+                    </h3>
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                        @foreach (var series in Model.CharacterTvSeries.Select(cts => cts.TvSeries))
+                        {
+                            <div class="col">
+                                <div class="card h-100 border-0 shadow-sm appearance-card">
+
+                                    @* <div class="card-img-top appearance-image-container"> *@
+                                    @*     <img src="~/Assets/Customer/TvSeriesPhoto/@series.ImgUrl" *@ 
+                                    @*     @* @*      class="img-fluid rounded-top" *@
+                                    @*     @* @*      alt="@series.Title"> *@
+                                    @* </div> *@
+
+                                    <div class="card-body">
+                                        <h5 class="card-title fw-bold">@series.Title</h5>
+                                        <div class="d-flex flex-wrap gap-2 mb-3">
+                                            <span class="badge bg-secondary bg-opacity-10 text-secondary">
+                                                @series.ReleaseYear
+                                            </span>
+                                            <span class="badge bg-secondary bg-opacity-10 text-secondary">
+                                                @series.Author
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer bg-transparent border-0 d-flex gap-2">
+                                        <a asp-area="Customer" asp-controller="Season" asp-action="AllSeasons" asp-route-Id="@series.Id"
+                                           class="btn btn-sm btn-primary flex-grow-1">
+                                            <i class="fas fa-list me-1"></i>Seasons
+                                        </a>
+                                        <a asp-area="Customer" asp-controller="Episode" asp-action="AllEpisode" asp-route-Id="@series.Id"
+                                           class="btn btn-sm btn-outline-secondary">
+                                            <i class="fas fa-play me-1"></i>Episodes
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (!Model.CharacterMovies.Any() && !Model.CharacterTvSeries.Any())
+            {
+                <div class="alert alert-info text-center py-4">
+                    <i class="fas fa-star fa-3x mb-3"></i>
+                    <h4 class="alert-heading">No Appearances Found</h4>
+                    <p>This character doesn't appear in any movies or TV series yet.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .appearance-card {
+        transition: all 0.3s ease;
+    }
+
+        .appearance-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+    .appearance-image-container {
+        height: 200px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f8f9fa;
+    }
+
+        .appearance-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+    .appearance-card:hover .appearance-image-container img {
+        transform: scale(1.05);
+    }
+
+    .badge {
+        font-weight: 500;
+    }
+</style>
