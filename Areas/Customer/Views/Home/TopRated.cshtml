@@ -1,0 +1,171 @@
+﻿@model TopRatedVM
+@{
+    ViewData["Title"] = "Top Rated Content";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">Top Rated Content</h1>
+
+    <!-- Top Rated TV Series -->
+    <div class="top-rated-section mb-5">
+        <h2 class="section-title mb-4">
+            <i class="fas fa-tv me-2"></i>Top Rated TV Series
+        </h2>
+        @if (Model.TopTvSeries.Any())
+        {
+            <div class="row">
+                @foreach (var series in Model.TopTvSeries)
+                {
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="card h-100">
+                            <img src="~/Assets/Customer/TvSeries/@series.ImgUrl" class="card-img-top" alt="@series.Title poster">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h5 class="card-title mb-0">@series.Title</h5>
+                                    <span class="badge bg-warning text-dark">@series.Rating</span>
+                                </div>
+                                <p class="card-text text-muted small">@series.Description</p>
+                                <a asp-controller="Season" asp-action="AllSeasons" asp-route-id="@series.Id"
+                                   class="btn btn-sm btn-outline-primary">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info">No top rated TV series found.</div>
+        }
+    </div>
+
+    <!-- Top Rated Movies -->
+    <div class="top-rated-section mb-5">
+        <h2 class="section-title mb-4">
+            <i class="fas fa-film me-2"></i>Top Rated Movies
+        </h2>
+        @if (Model.TopMovies.Any())
+        {
+            <div class="row">
+                @foreach (var movie in Model.TopMovies)
+                {
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="card h-100">
+                            <img src="~/Assets/Customer/MoviesPhoto/@movie.ImgUrl" class="card-img-top" alt="@movie.Title poster">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h5 class="card-title mb-0">@movie.Title</h5>
+                                    <span class="badge bg-warning text-dark">@movie.Rating</span>
+                                </div>
+                                <p class="card-text text-muted small">@movie.Description</p>
+                                <p class="card-text text-muted small">@movie.ReleaseYear • @movie.Duration</p>
+                                <a asp-controller="Movie" asp-action="MoreDetils" asp-route-id="@movie.Id"
+                                   class="btn btn-sm btn-outline-primary">View Details</a>
+
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info">No top rated movies found.</div>
+        }
+    </div>
+
+
+    <!-- Top Rated Episodes -->
+    <div class="top-rated-section mb-4">
+        <h4 class="section-title mb-3">
+            <i class="fas fa-star me-2 text-warning"></i>Top Rated Episodes
+        </h4>
+
+        @if (Model.TopEpisodes.Any())
+        {
+            <div class="row">
+                @foreach (var episode in Model.TopEpisodes)
+                {
+                    <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+                        <div class="card border-0 shadow-sm h-100 rounded-3">
+                            <div class="row g-0">
+
+                                @if (!string.IsNullOrEmpty(episode.ThumbnailUrl))
+                                {
+                                    <div class="col-4">
+                                        <img src="@episode.ThumbnailUrl"
+                                             class="img-fluid rounded-start"
+                                             alt="@episode.Title"
+                                             style="height: 100px; object-fit: cover;" />
+                                    </div>
+                                }
+
+                                <div class="col-8">
+                                    <div class="card-body py-2 px-3">
+                                        <h6 class="card-title text-truncate mb-1">@episode.Title</h6>
+
+                                        <small class="text-muted d-block mb-1">
+                                            <strong>@episode.Season.TvSeries.Title</strong><br />
+                                            S @episode.Season.SeasonNumber - Ep @episode.EpisodeNumber
+                                        </small>
+
+                                        <p class="card-text text-muted small mb-1" style="font-size: 0.8rem; max-height: 2.5em; overflow: hidden;">
+                                            @episode.Description
+                                        </p>
+
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="badge bg-warning text-dark">@episode.Rating</span>
+                                            <a asp-controller="Episode" 
+                                               class="btn btn-sm btn-outline-primary">More Episodes</a>
+
+                                            <a href="@episode.VideoUrl"
+                                               class="btn btn-sm btn-outline-primary">Show</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info">No top rated episodes found.</div>
+        }
+    </div>
+
+
+</div>
+
+@section Styles {
+    <style>
+        .top-rated-section {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            }
+
+        .badge {
+            font-size: 0.9rem;
+            padding: 0.35em 0.65em;
+        }
+    </style>
+}

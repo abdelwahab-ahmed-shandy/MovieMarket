@@ -79,16 +79,17 @@
                     </ul>
 
                     <!-- Search Bar -->
-                    <form class="d-flex me-3 search-form" role="search">
+                    <form class="d-flex me-3 search-form" role="search" method="get" action="/Customer/Home/GlobalSearch">
                         <div class="input-group">
                             <input class="form-control search-input" type="search" placeholder="Search movies, series..."
-                                   aria-label="Search" id="globalSearch">
+                                   aria-label="Search" id="globalSearch" name="query">
                             <button class="btn btn-primary search-btn" type="submit">
                                 <i class="fas fa-search"></i>
                             </button>
                         </div>
                         <div class="search-results dropdown-menu w-100 p-2 d-none"></div>
                     </form>
+
 
                     <!-- User Section -->
                     <ul class="navbar-nav">
@@ -217,10 +218,10 @@
                     </ul>
 
                     <div class="d-flex">
-                        <a href="/specials" class="btn btn-sm btn-outline-danger me-2">
+                        <a href="/Home/Specials" class="btn btn-sm btn-outline-danger me-2">
                             <i class="fas fa-fire me-1"></i> Special Offers
                         </a>
-                        <a href="/new-releases" class="btn btn-sm btn-outline-primary">
+                        <a href="/Home/NewReleases" class="btn btn-sm btn-outline-primary">
                             <i class="fas fa-star me-1"></i> New Releases
                         </a>
                     </div>
@@ -338,6 +339,9 @@
     <script src="~/js/cart.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
+
+    @RenderSection("Styles", required: false)
+
 
     <script>
         // Function to toggle secondary navbar

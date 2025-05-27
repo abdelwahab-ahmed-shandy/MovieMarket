@@ -9,7 +9,6 @@ namespace MovieMart.Models
         public string? LastName { get; set; }
         public string? Address { get; set; }
 
-        // Add IsBlocked
         public bool IsBlocked { get; set; }
     }
 }

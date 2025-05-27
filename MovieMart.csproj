@@ -22,9 +22,4 @@
 		<PackageReference Include="Stripe.net" Version="48.0.0" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="wwwroot\Assets\Customer\MoviesPhoto\" />
-	  <Folder Include="wwwroot\Assets\Customer\TvSeries\" />
-	</ItemGroup>
-
 </Project>

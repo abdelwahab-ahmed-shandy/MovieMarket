@@ -1,0 +1,117 @@
+﻿@model IEnumerable<MovieMart.Models.Movie>
+
+@{
+    ViewData["Title"] = "New Releases";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="display-4">New Movie Releases</h1>
+        <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                Sort By
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="sortDropdown">
+                <li><a class="dropdown-item" href="?sort=release">Release Date</a></li>
+                <li><a class="dropdown-item" href="?sort=rating">Rating</a></li>
+                <li><a class="dropdown-item" href="?sort=title">Title</a></li>
+            </ul>
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+            @foreach (var movie in Model)
+            {
+                <div class="col">
+                    <div class="card h-100 shadow-sm movie-card">
+                        <div class="position-relative">
+                            <img src="@movie.ImgUrl" class="card-img-top" alt="@movie.Title" style="height: 300px; object-fit: cover;">
+                            @if (movie.Rating.HasValue)
+                            {
+                                <div class="position-absolute top-0 end-0 bg-warning text-dark px-2 py-1 m-2 rounded">
+                                    <i class="fas fa-star"></i> @movie.Rating?.ToString("0.0")
+                                </div>
+                            }
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">@movie.Title</h5>
+                            <p class="card-text text-muted">
+                                <small>
+                                    @movie.ReleaseYear • @movie.Category?.Name •
+                                    @movie.Duration.ToString(@"h\:mm")
+                                </small>
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-success fw-bold">@movie.Price.ToString("C")</span>
+                                <a asp-action="Details" asp-route-id="@movie.Id" class="btn btn-sm btn-outline-primary">
+                                    Details <i class="fas fa-chevron-right ms-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                        @if (movie.StartDate >= DateTime.Now.AddDays(-7))
+                        {
+                            <div class="card-footer bg-danger text-white">
+                                <small>NEW THIS WEEK!</small>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            <h4 class="alert-heading">No new releases found!</h4>
+            <p>Check back later for upcoming movies.</p>
+        </div>
+    }
+</div>
+
+@section Styles {
+    <style>
+        .movie-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+            .movie-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            }
+
+        .card-img-top {
+            transition: transform 0.5s ease;
+        }
+
+        .movie-card:hover .card-img-top {
+            transform: scale(1.05);
+        }
+
+        .card-title {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        // يمكنك إضافة أي JavaScript مخصص هنا
+        document.addEventListener('DOMContentLoaded', function() {
+            // Example: Add click event to all movie cards
+            document.querySelectorAll('.movie-card').forEach(card => {
+                card.addEventListener('click', function(e) {
+                    if (!e.target.closest('a, button')) {
+                        window.location = this.querySelector('a').href;
+                    }
+                });
+            });
+        });
+    </script>
+}

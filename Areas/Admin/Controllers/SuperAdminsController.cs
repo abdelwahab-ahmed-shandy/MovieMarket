@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieMart.Repositories.IRepositories;
+using System.Security.Claims;
 
 namespace MovieMart.Areas.Admin.Controllers
 {
@@ -20,6 +21,8 @@ namespace MovieMart.Areas.Admin.Controllers
             this._applicationUserRepository = applicationUserRepository;
             this._logger = logger;
         }
+
+
 
         #region View Super Admin
         public async Task<IActionResult> AllSuperAdmins(string? query, int page)
@@ -119,6 +122,27 @@ namespace MovieMart.Areas.Admin.Controllers
         // This action is responsible for blocking a customer's account based on their ID
         public async Task<IActionResult> Block(string Id)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Challenge();
+            }
+
+            var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(currentUserId))
+            {
+                TempData["Message"] = "User session invalid";
+                TempData["MessageType"] = "error";
+
+                return RedirectToAction(nameof(AllSuperAdmins));
+            }
+
+            if (currentUserId == Id)
+            {
+                TempData["Message"] = "You cannot Block your own account!";
+                TempData["MessageType"] = "error";
+                return RedirectToAction(nameof(AllSuperAdmins));
+            }
+
             // Attempt to retrieve the user from the database using the provided ID
             var userDB = await _userManager.FindByIdAsync(Id);
 

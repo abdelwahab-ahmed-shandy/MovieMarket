@@ -127,10 +127,10 @@
                     </div>
 
                     <!-- Social Login Buttons -->
-                    <div class="row g-3">
+                    <div class="row justify-content-center">
                         <!-- Google Login -->
-                        <div class="col-md-6">
-                            <form asp-action="ExternalLogin" asp-controller="Account" method="post">
+                        <div class="col-md-6 d-flex justify-content-center">
+                            <form asp-action="ExternalLogin" asp-controller="Account" method="post" class="w-100" style="max-width: 300px;">
                                 <input type="hidden" name="provider" value="Google" />
                                 <input type="hidden" name="returnUrl" value="/" />
                                 <button type="submit" class="btn btn-outline-danger w-100 rounded-pill py-2">
@@ -138,37 +138,8 @@
                                 </button>
                             </form>
                         </div>
-
-                        <!-- GitHub Login -->
-                        <div class="col-md-6">
-                            <form asp-action="ExternalLogin" method="post">
-                                <input type="hidden" name="provider" value="GitHub" />
-                                <button type="submit" class="btn btn-dark w-100 rounded-pill py-2">
-                                    <i class="fab fa-github me-2"></i> GitHub
-                                </button>
-                            </form>
-                        </div>
-
-                        <!-- Facebook Login (Optional) -->
-                        <div class="col-md-6">
-                            <form asp-action="ExternalLogin" method="post">
-                                <input type="hidden" name="provider" value="Facebook" />
-                                <button type="submit" class="btn btn-primary w-100 rounded-pill py-2">
-                                    <i class="fab fa-facebook-f me-2"></i> Facebook
-                                </button>
-                            </form>
-                        </div>
-
-                        <!-- Twitter Login (Optional) -->
-                        <div class="col-md-6">
-                            <form asp-action="ExternalLogin" method="post">
-                                <input type="hidden" name="provider" value="Twitter" />
-                                <button type="submit" class="btn btn-info text-white w-100 rounded-pill py-2">
-                                    <i class="fab fa-twitter me-2"></i> Twitter
-                                </button>
-                            </form>
-                        </div>
                     </div>
+
                 </div>
             </div>
         </div>

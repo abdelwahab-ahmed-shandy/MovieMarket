@@ -1,5 +1,4 @@
 ﻿
-
 namespace MovieMart.Repositories
 {
     public class SeasonRepository : Repository<Season>, ISeasonRepository

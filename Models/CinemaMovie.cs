@@ -8,7 +8,6 @@
         public int MovieId { get; set; }
         public Movie Movie { get; set; } = null!;
 
-        //todo:Add in Admin And Customer Contrroller
         [Required]
         public DateTime ShowTime { get; set; }
     }

@@ -30,6 +30,7 @@ namespace MovieMart.Areas.Customer.Controllers
             _cartRepository = cartRepository;
 
         }
+
         public IActionResult Success(int orderId)
         {
             using var transaction = _movieMarketDbContext.Database.BeginTransaction();

@@ -49,6 +49,7 @@ namespace MovieMart.Areas.Admin.Controllers
                 // todo : here 
                 //NewUsersThisMonth = _userManager.Users.Count(u=>u.Created),
                 //HighPriorityOrders   = _orderRepository.Get().Count(o => o.Pro),
+
                 // NewContentToday 
                 RecentActivities = _activityLogRepository.Get()
                                     .Include(a => a.User)

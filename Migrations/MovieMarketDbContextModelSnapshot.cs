@@ -311,6 +311,9 @@ namespace MovieMart.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("Categories");
 
                     b.HasData(
@@ -477,6 +480,9 @@ namespace MovieMart.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("Cinemas");
 
                     b.HasData(
@@ -539,7 +545,8 @@ namespace MovieMart.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal?>("Rating")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(3, 1)
+                        .HasColumnType("decimal(3,1)");
 
                     b.Property<int>("SeasonId")
                         .HasColumnType("int");
@@ -683,7 +690,9 @@ namespace MovieMart.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Price")
-                        .HasColumnType("float");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("float")
+                        .HasDefaultValue(0.0);
 
                     b.Property<double?>("Rating")
                         .HasColumnType("float");
@@ -702,6 +711,9 @@ namespace MovieMart.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("Title")
+                        .IsUnique();
 
                     b.ToTable("Movies");
 
@@ -748,6 +760,27 @@ namespace MovieMart.Migrations
                             StartDate = new DateTime(1988, 7, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Title = "Akira"
                         });
+                });
+
+            modelBuilder.Entity("MovieMart.Models.MovieSpecial", b =>
+                {
+                    b.Property<int>("MovieId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SpecialId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsFeatured")
+                        .HasColumnType("bit");
+
+                    b.HasKey("MovieId", "SpecialId");
+
+                    b.HasIndex("SpecialId");
+
+                    b.ToTable("MovieSpecials");
                 });
 
             modelBuilder.Entity("MovieMart.Models.Order", b =>
@@ -897,6 +930,38 @@ namespace MovieMart.Migrations
                             Title = "Attack on Titan - Season 3",
                             TvSeriesId = 2
                         });
+                });
+
+            modelBuilder.Entity("MovieMart.Models.Special", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<decimal>("DiscountPercentage")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Specials");
                 });
 
             modelBuilder.Entity("MovieMart.Models.TvSeries", b =>
@@ -1134,6 +1199,25 @@ namespace MovieMart.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("MovieMart.Models.MovieSpecial", b =>
+                {
+                    b.HasOne("MovieMart.Models.Movie", "Movie")
+                        .WithMany("MovieSpecials")
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MovieMart.Models.Special", "Special")
+                        .WithMany("MovieSpecials")
+                        .HasForeignKey("SpecialId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Movie");
+
+                    b.Navigation("Special");
+                });
+
             modelBuilder.Entity("MovieMart.Models.Order", b =>
                 {
                     b.HasOne("MovieMart.Models.ApplicationUser", "ApplicationUser")
@@ -1197,11 +1281,18 @@ namespace MovieMart.Migrations
                     b.Navigation("CharacterMovies");
 
                     b.Navigation("CinemaMovies");
+
+                    b.Navigation("MovieSpecials");
                 });
 
             modelBuilder.Entity("MovieMart.Models.Season", b =>
                 {
                     b.Navigation("Episodes");
+                });
+
+            modelBuilder.Entity("MovieMart.Models.Special", b =>
+                {
+                    b.Navigation("MovieSpecials");
                 });
 
             modelBuilder.Entity("MovieMart.Models.TvSeries", b =>

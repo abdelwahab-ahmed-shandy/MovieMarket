@@ -1,0 +1,170 @@
+﻿@model SearchResultVM
+@{
+    ViewData["Title"] = "Search Results";
+}
+
+<div class="container mt-4">
+    <h1>Search Results for "@ViewBag.Query"</h1>
+
+    @if (!Model.TvSeries.Any() && !Model.Seasons.Any() && !Model.Episodes.Any() &&
+    !Model.Characters.Any() && !Model.Categories.Any() && !Model.Movies.Any())
+    {
+        <div class="alert alert-info mt-4">
+            No results found for your search.
+        </div>
+    }
+    else
+    {
+        <!-- TV Series Section -->
+        @if (Model.TvSeries.Any())
+        {
+            <div class="search-section mt-4">
+                <h2>TV Series</h2>
+                <div class="row">
+                    @foreach (var series in Model.TvSeries)
+                    {
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">@series.Title</h5>
+                                    <p class="card-text">@series.Description</p>
+                                    <a asp-controller="Season" asp-action="AllSeasons" asp-route-id="@series.Id" class="btn btn-primary">Show More</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        <!-- Movies Section -->
+        @if (Model.Movies.Any())
+        {
+            <div class="search-section mt-4">
+                <h2>Movies</h2>
+                <div class="row">
+                    @foreach (var movie in Model.Movies)
+                    {
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">@movie.Title</h5>
+                                    <p class="card-text">@movie.Description</p>
+                                    <a asp-controller="Movie" asp-action="MoreDetils" asp-route-id="@movie.Id" class="btn btn-primary">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        <!-- Seasons Section -->
+        @if (Model.Seasons.Any())
+        {
+            <div class="search-section mt-4">
+                <h2>Seasons</h2>
+                <div class="row">
+                    @foreach (var season in Model.Seasons)
+                    {
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">@season.Title</h5>
+                                    <p class="card-text">Season @season.SeasonNumber of @season.TvSeries?.Title</p>
+                                    <a asp-controller="Episode" asp-action="AllSeasons" asp-route-id="@season.Id" class="btn btn-primary">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        <!-- Episodes Section -->
+        @if (Model.Episodes.Any())
+        {
+            <div class="search-section mt-4">
+                <h2>Episodes</h2>
+                <div class="row">
+                    @foreach (var episode in Model.Episodes)
+                    {
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">@episode.Title</h5>
+                                    <p class="card-text">Episode @episode.EpisodeNumber of Season @episode.Season?.SeasonNumber (@episode.Season?.TvSeries?.Title)</p>
+                                    <a asp-controller="Episode" asp-action="AllEpisode" asp-route-id="@episode.Id" class="btn btn-primary">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        <!-- Characters Section -->
+        @if (Model.Characters.Any())
+        {
+            <div class="search-section mt-4">
+                <h2>Characters</h2>
+                <div class="row">
+                    @foreach (var character in Model.Characters)
+                    {
+                        <div class="col-md-3 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">@character.Name</h5>
+                                    <p class="card-text">@character.Description</p>
+                                    <a asp-controller="Character" asp-action="Details" asp-route-id="@character.Id" class="btn btn-primary">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        <!-- Categories Section -->
+        @if (Model.Categories.Any())
+        {
+            <div class="search-section mt-4">
+                <h2>Categories</h2>
+                <div class="row">
+                    @foreach (var category in Model.Categories)
+                    {
+                        <div class="col-md-3 mb-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">@category.Name</h5>
+                                    <a asp-controller="Category" asp-action="Details" asp-route-id="@category.Id" class="btn btn-primary">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@section Styles {
+    <style>
+        .search-section {
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            height: 100%;
+            transition: transform 0.2s;
+        }
+
+            .card:hover {
+                transform: scale(1.03);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+    </style>
+}

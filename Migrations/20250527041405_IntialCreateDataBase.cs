@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MovieMart.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreateMovieMartBD : Migration
+    public partial class IntialCreateDataBase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -100,6 +100,23 @@ namespace MovieMart.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Specials",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    DiscountPercentage = table.Column<decimal>(type: "decimal(5,2)", precision: 5, scale: 2, nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Specials", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TvSeries",
                 columns: table => new
                 {
@@ -134,6 +151,29 @@ namespace MovieMart.Migrations
                         name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ActivityLogs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Action = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Details = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ActivityLogs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ActivityLogs_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -259,7 +299,7 @@ namespace MovieMart.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    Price = table.Column<double>(type: "float", nullable: false),
+                    Price = table.Column<double>(type: "float", nullable: false, defaultValue: 0.0),
                     Author = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     ImgUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Duration = table.Column<TimeSpan>(type: "time", nullable: false),
@@ -389,7 +429,6 @@ namespace MovieMart.Migrations
                 {
                     CinemaId = table.Column<int>(type: "int", nullable: false),
                     MovieId = table.Column<int>(type: "int", nullable: false),
-                    Id = table.Column<int>(type: "int", nullable: false),
                     ShowTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -405,6 +444,32 @@ namespace MovieMart.Migrations
                         name: "FK_CinemaMovies_Movies_MovieId",
                         column: x => x.MovieId,
                         principalTable: "Movies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MovieSpecials",
+                columns: table => new
+                {
+                    MovieId = table.Column<int>(type: "int", nullable: false),
+                    SpecialId = table.Column<int>(type: "int", nullable: false),
+                    IsFeatured = table.Column<bool>(type: "bit", nullable: false),
+                    DisplayOrder = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MovieSpecials", x => new { x.MovieId, x.SpecialId });
+                    table.ForeignKey(
+                        name: "FK_MovieSpecials_Movies_MovieId",
+                        column: x => x.MovieId,
+                        principalTable: "Movies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MovieSpecials_Specials_SpecialId",
+                        column: x => x.SpecialId,
+                        principalTable: "Specials",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -444,8 +509,11 @@ namespace MovieMart.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     EpisodeNumber = table.Column<int>(type: "int", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Rating = table.Column<decimal>(type: "decimal(3,1)", precision: 3, scale: 1, nullable: true),
                     Duration = table.Column<TimeSpan>(type: "time", nullable: false),
                     VideoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ThumbnailUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SeasonId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -543,19 +611,24 @@ namespace MovieMart.Migrations
 
             migrationBuilder.InsertData(
                 table: "Episodes",
-                columns: new[] { "Id", "Duration", "EpisodeNumber", "SeasonId", "Title", "VideoUrl" },
+                columns: new[] { "Id", "Description", "Duration", "EpisodeNumber", "Rating", "SeasonId", "ThumbnailUrl", "Title", "VideoUrl" },
                 values: new object[,]
                 {
-                    { 1, new TimeSpan(0, 0, 23, 0, 0), 1, 1, "Enter: Naruto Uzumaki!", null },
-                    { 2, new TimeSpan(0, 0, 23, 0, 0), 2, 1, "My Name is Konohamaru!", null },
-                    { 3, new TimeSpan(0, 0, 23, 0, 0), 3, 1, "Sasuke and Sakura: Friends or Foes?", null },
-                    { 4, new TimeSpan(0, 0, 25, 0, 0), 1, 2, "To You, in 2000 Years: The Fall of Shiganshina", null },
-                    { 5, new TimeSpan(0, 0, 25, 0, 0), 2, 2, "That Day: The Fall of Shiganshina, Part 2", null },
-                    { 6, new TimeSpan(0, 0, 25, 0, 0), 3, 2, "A Dim Light Amid Despair: Humanity's Comeback", null },
-                    { 7, new TimeSpan(0, 0, 24, 0, 0), 1, 3, "I'm Luffy! The Man Who's Gonna Be King of the Pirates!", null },
-                    { 8, new TimeSpan(0, 0, 24, 0, 0), 2, 3, "Enter the Great Swordsman! Pirate Hunter Roronoa Zoro", null },
-                    { 9, new TimeSpan(0, 0, 24, 0, 0), 3, 3, "Morgan vs. Luffy! Who's This Beautiful Young Girl?", null }
+                    { 1, "", new TimeSpan(0, 0, 23, 0, 0), 1, 5.5m, 1, null, "Enter: Naruto Uzumaki!", null },
+                    { 2, "", new TimeSpan(0, 0, 23, 0, 0), 2, 5.5m, 1, null, "My Name is Konohamaru!", null },
+                    { 3, "", new TimeSpan(0, 0, 23, 0, 0), 3, 5.5m, 1, null, "Sasuke and Sakura: Friends or Foes?", null },
+                    { 4, "", new TimeSpan(0, 0, 25, 0, 0), 1, 5.5m, 2, null, "To You, in 2000 Years: The Fall of Shiganshina", null },
+                    { 5, "", new TimeSpan(0, 0, 25, 0, 0), 2, 5.5m, 2, null, "That Day: The Fall of Shiganshina, Part 2", null },
+                    { 6, "", new TimeSpan(0, 0, 25, 0, 0), 3, 5.5m, 2, null, "A Dim Light Amid Despair: Humanity's Comeback", null },
+                    { 7, "", new TimeSpan(0, 0, 24, 0, 0), 1, 5.5m, 3, null, "I'm Luffy! The Man Who's Gonna Be King of the Pirates!", null },
+                    { 8, "", new TimeSpan(0, 0, 24, 0, 0), 2, 5.5m, 3, null, "Enter the Great Swordsman! Pirate Hunter Roronoa Zoro", null },
+                    { 9, "", new TimeSpan(0, 0, 24, 0, 0), 3, 5.5m, 3, null, "Morgan vs. Luffy! Who's This Beautiful Young Girl?", null }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ActivityLogs_UserId",
+                table: "ActivityLogs",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -607,6 +680,12 @@ namespace MovieMart.Migrations
                 column: "CinemaId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Categories_Name",
+                table: "Categories",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CharacterMovies_MovieId",
                 table: "CharacterMovies",
                 column: "MovieId");
@@ -622,6 +701,12 @@ namespace MovieMart.Migrations
                 column: "MovieId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Cinemas_Name",
+                table: "Cinemas",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Episodes_SeasonId",
                 table: "Episodes",
                 column: "SeasonId");
@@ -630,6 +715,17 @@ namespace MovieMart.Migrations
                 name: "IX_Movies_CategoryId",
                 table: "Movies",
                 column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Movies_Title",
+                table: "Movies",
+                column: "Title",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MovieSpecials_SpecialId",
+                table: "MovieSpecials",
+                column: "SpecialId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderItems_MovieId",
@@ -650,6 +746,9 @@ namespace MovieMart.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ActivityLogs");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -681,6 +780,9 @@ namespace MovieMart.Migrations
                 name: "Episodes");
 
             migrationBuilder.DropTable(
+                name: "MovieSpecials");
+
+            migrationBuilder.DropTable(
                 name: "OrderItems");
 
             migrationBuilder.DropTable(
@@ -694,6 +796,9 @@ namespace MovieMart.Migrations
 
             migrationBuilder.DropTable(
                 name: "Seasons");
+
+            migrationBuilder.DropTable(
+                name: "Specials");
 
             migrationBuilder.DropTable(
                 name: "Movies");

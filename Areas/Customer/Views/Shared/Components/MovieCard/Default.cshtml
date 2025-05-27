@@ -18,7 +18,7 @@
         <p class="card-text text-muted small mb-3">@Model.Description</p>
         <div class="d-flex justify-content-between align-items-center">
             <span class="text-success fw-bold">@Model.Price.ToString("C")</span>
-            <a asp-action="MoreDetails" asp-route-id="@Model.Id" class="btn btn-sm btn-primary">
+            <a asp-controller="Movie" asp-action="MoreDetils" asp-route-id="@Model.Id" class="btn btn-sm btn-primary">
                 Details <i class="fas fa-chevron-right ms-1"></i>
             </a>
         </div>

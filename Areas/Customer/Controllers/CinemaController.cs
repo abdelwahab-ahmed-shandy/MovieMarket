@@ -17,6 +17,8 @@ namespace MovieMarket.Areas.Customer.Controllers
             this._movieRepository = movieRepository;
         }
 
+
+
         public IActionResult Index()
         {
             var ViewCinema = _cinemaRepository.Get().ToList();
@@ -83,8 +85,19 @@ namespace MovieMarket.Areas.Customer.Controllers
             ViewBag.CurrentTimeFilter = timeFilter;
             ViewBag.CurrentSort = sort;
 
+            if (cinemaWithMovies?.CinemaMovies != null)
+            {
+                ViewBag.Count = cinemaWithMovies.CinemaMovies.Count;
+            }
+            else
+            {
+                ViewBag.Count = 0;
+            }
+
             return View(cinemaWithMovies);
         }
+
+
 
     }
 }

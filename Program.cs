@@ -59,25 +59,32 @@ namespace MovieMarket
             // Register repository services with Dependency Injection (Scoped Lifetime) 
             // This ensures that a new instance is created per request, improving efficiency 
             // while maintaining consistency within a request's lifecycle.
+            builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
+
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<ICharacterRepository, CharacterRepository>();
             builder.Services.AddScoped<IEpisodeRepository, EpisodeRepository>();
             builder.Services.AddScoped<IMovieRepository, MovieRepository>();
-            builder.Services.AddScoped<ICinemaRepository, CinemaRepository>();
             builder.Services.AddScoped<ISeasonRepository, SeasonRepository>();
             builder.Services.AddScoped<ITvSeriesRepository, TvSeriesRepository>();
 
             builder.Services.AddScoped<ICartRepository, CartRepository>();
-            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-            builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+            builder.Services.AddScoped<ICartService, CartService>();
 
             builder.Services.AddScoped<IActivityLogRepository, ActivityLogRepository>();
 
-            builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
+            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+            builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
+
+            builder.Services.AddScoped<ICinemaRepository, CinemaRepository>();
             builder.Services.AddScoped<IRepository<CinemaMovie>, Repository<CinemaMovie>>();
 
 
-            builder.Services.AddScoped<ICartService, CartService>();
+
+
+            builder.Services.AddScoped<ISpecialRepository, SpecialRepository>();
+            builder.Services.AddScoped<IRepository<MovieSpecial>, Repository<MovieSpecial>>();
+
 
 
             // Email Sender .
@@ -103,7 +110,6 @@ namespace MovieMarket
                 // Set the client secret key for Google authentication from the application settings 
                 googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
             })
-            //todo : here >> The Big Error.
             .AddGitHub(options =>
             {
                 options.ClientId = builder.Configuration["Authentication:GitHub:ClientId"];

@@ -12,8 +12,8 @@ using MovieMart.DataAccess;
 namespace MovieMart.Migrations
 {
     [DbContext(typeof(MovieMarketDbContext))]
-    [Migration("20250421082623_EditCinemaMovies")]
-    partial class EditCinemaMovies
+    [Migration("20250527041405_IntialCreateDataBase")]
+    partial class IntialCreateDataBase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -314,6 +314,9 @@ namespace MovieMart.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("Categories");
 
                     b.HasData(
@@ -480,6 +483,9 @@ namespace MovieMart.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("Cinemas");
 
                     b.HasData(
@@ -532,14 +538,24 @@ namespace MovieMart.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<TimeSpan>("Duration")
                         .HasColumnType("time");
 
                     b.Property<int>("EpisodeNumber")
                         .HasColumnType("int");
 
+                    b.Property<decimal?>("Rating")
+                        .HasPrecision(3, 1)
+                        .HasColumnType("decimal(3,1)");
+
                     b.Property<int>("SeasonId")
                         .HasColumnType("int");
+
+                    b.Property<string>("ThumbnailUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -559,72 +575,90 @@ namespace MovieMart.Migrations
                         new
                         {
                             Id = 1,
+                            Description = "",
                             Duration = new TimeSpan(0, 0, 23, 0, 0),
                             EpisodeNumber = 1,
+                            Rating = 5.5m,
                             SeasonId = 1,
                             Title = "Enter: Naruto Uzumaki!"
                         },
                         new
                         {
                             Id = 2,
+                            Description = "",
                             Duration = new TimeSpan(0, 0, 23, 0, 0),
                             EpisodeNumber = 2,
+                            Rating = 5.5m,
                             SeasonId = 1,
                             Title = "My Name is Konohamaru!"
                         },
                         new
                         {
                             Id = 3,
+                            Description = "",
                             Duration = new TimeSpan(0, 0, 23, 0, 0),
                             EpisodeNumber = 3,
+                            Rating = 5.5m,
                             SeasonId = 1,
                             Title = "Sasuke and Sakura: Friends or Foes?"
                         },
                         new
                         {
                             Id = 4,
+                            Description = "",
                             Duration = new TimeSpan(0, 0, 25, 0, 0),
                             EpisodeNumber = 1,
+                            Rating = 5.5m,
                             SeasonId = 2,
                             Title = "To You, in 2000 Years: The Fall of Shiganshina"
                         },
                         new
                         {
                             Id = 5,
+                            Description = "",
                             Duration = new TimeSpan(0, 0, 25, 0, 0),
                             EpisodeNumber = 2,
+                            Rating = 5.5m,
                             SeasonId = 2,
                             Title = "That Day: The Fall of Shiganshina, Part 2"
                         },
                         new
                         {
                             Id = 6,
+                            Description = "",
                             Duration = new TimeSpan(0, 0, 25, 0, 0),
                             EpisodeNumber = 3,
+                            Rating = 5.5m,
                             SeasonId = 2,
                             Title = "A Dim Light Amid Despair: Humanity's Comeback"
                         },
                         new
                         {
                             Id = 7,
+                            Description = "",
                             Duration = new TimeSpan(0, 0, 24, 0, 0),
                             EpisodeNumber = 1,
+                            Rating = 5.5m,
                             SeasonId = 3,
                             Title = "I'm Luffy! The Man Who's Gonna Be King of the Pirates!"
                         },
                         new
                         {
                             Id = 8,
+                            Description = "",
                             Duration = new TimeSpan(0, 0, 24, 0, 0),
                             EpisodeNumber = 2,
+                            Rating = 5.5m,
                             SeasonId = 3,
                             Title = "Enter the Great Swordsman! Pirate Hunter Roronoa Zoro"
                         },
                         new
                         {
                             Id = 9,
+                            Description = "",
                             Duration = new TimeSpan(0, 0, 24, 0, 0),
                             EpisodeNumber = 3,
+                            Rating = 5.5m,
                             SeasonId = 3,
                             Title = "Morgan vs. Luffy! Who's This Beautiful Young Girl?"
                         });
@@ -659,7 +693,9 @@ namespace MovieMart.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Price")
-                        .HasColumnType("float");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("float")
+                        .HasDefaultValue(0.0);
 
                     b.Property<double?>("Rating")
                         .HasColumnType("float");
@@ -678,6 +714,9 @@ namespace MovieMart.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("Title")
+                        .IsUnique();
 
                     b.ToTable("Movies");
 
@@ -724,6 +763,27 @@ namespace MovieMart.Migrations
                             StartDate = new DateTime(1988, 7, 16, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Title = "Akira"
                         });
+                });
+
+            modelBuilder.Entity("MovieMart.Models.MovieSpecial", b =>
+                {
+                    b.Property<int>("MovieId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SpecialId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsFeatured")
+                        .HasColumnType("bit");
+
+                    b.HasKey("MovieId", "SpecialId");
+
+                    b.HasIndex("SpecialId");
+
+                    b.ToTable("MovieSpecials");
                 });
 
             modelBuilder.Entity("MovieMart.Models.Order", b =>
@@ -873,6 +933,38 @@ namespace MovieMart.Migrations
                             Title = "Attack on Titan - Season 3",
                             TvSeriesId = 2
                         });
+                });
+
+            modelBuilder.Entity("MovieMart.Models.Special", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<decimal>("DiscountPercentage")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Specials");
                 });
 
             modelBuilder.Entity("MovieMart.Models.TvSeries", b =>
@@ -1110,6 +1202,25 @@ namespace MovieMart.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("MovieMart.Models.MovieSpecial", b =>
+                {
+                    b.HasOne("MovieMart.Models.Movie", "Movie")
+                        .WithMany("MovieSpecials")
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MovieMart.Models.Special", "Special")
+                        .WithMany("MovieSpecials")
+                        .HasForeignKey("SpecialId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Movie");
+
+                    b.Navigation("Special");
+                });
+
             modelBuilder.Entity("MovieMart.Models.Order", b =>
                 {
                     b.HasOne("MovieMart.Models.ApplicationUser", "ApplicationUser")
@@ -1173,11 +1284,18 @@ namespace MovieMart.Migrations
                     b.Navigation("CharacterMovies");
 
                     b.Navigation("CinemaMovies");
+
+                    b.Navigation("MovieSpecials");
                 });
 
             modelBuilder.Entity("MovieMart.Models.Season", b =>
                 {
                     b.Navigation("Episodes");
+                });
+
+            modelBuilder.Entity("MovieMart.Models.Special", b =>
+                {
+                    b.Navigation("MovieSpecials");
                 });
 
             modelBuilder.Entity("MovieMart.Models.TvSeries", b =>

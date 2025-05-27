@@ -53,5 +53,9 @@ namespace MovieMart.Models
         // Many-to-Many: Cinema <-> Movie
         [ValidateNever]
         public ICollection<CinemaMovie> CinemaMovies { get; set; } = new List<CinemaMovie>();
+
+        public ICollection<MovieSpecial> MovieSpecials { get; set; }
+
+
     }
 }

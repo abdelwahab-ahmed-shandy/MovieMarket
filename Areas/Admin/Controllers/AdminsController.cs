@@ -20,6 +20,8 @@ namespace MovieMart.Areas.Admin.Controllers
             this._logger = logger;
         }
 
+
+
         #region View Admin
         public async Task<IActionResult> AllAdmins(string? query, int page)
         {
@@ -72,6 +74,7 @@ namespace MovieMart.Areas.Admin.Controllers
         #endregion
 
 
+
         #region Create New Admin
 
         // Display the new Admin creation form
@@ -111,6 +114,7 @@ namespace MovieMart.Areas.Admin.Controllers
         }
 
         #endregion
+
 
 
         #region Block Customer Account :
@@ -162,6 +166,7 @@ namespace MovieMart.Areas.Admin.Controllers
         #endregion
 
 
+
         #region Un Block Customer Account :
 
         // This action is responsible for unblocking a customer's account based on their ID
@@ -208,35 +213,11 @@ namespace MovieMart.Areas.Admin.Controllers
 
         #endregion
 
-        // todo : here 
-        //#region Update Permissions :
-
-        //public async Task<IActionResult> UpdatePermissions(string Id, List<string> permissions)
-        //{
-        //    var userBD = await _userManager.FindByIdAsync(Id);
-
-        //    if (userBD != null)
-        //    {
-        //        //
 
 
 
-        //        //
-        //        TempData["Message"] = "Permissions have been updated successfully.";
-        //        TempData["MessageType"] = "Success";
-        //    }
-        //    else
-        //    {
-        //        //
-        //        TempData["Message"] = "User not found.";
-        //        TempData["MessageType"] = "Error";
-        //    }
-        //    //
-        //    return RedirectToAction("AllAdmins");
-        //}
 
 
-        //#endregion
 
 
     }

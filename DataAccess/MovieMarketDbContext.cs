@@ -8,6 +8,8 @@ namespace MovieMart.DataAccess
 {
     public class MovieMarketDbContext : IdentityDbContext<ApplicationUser>
     {
+
+
         #region Entities definition :
 
         public DbSet<Cinema> Cinemas { get; set; }
@@ -16,6 +18,8 @@ namespace MovieMart.DataAccess
         public DbSet<TvSeries> TvSeries { get; set; }
         public DbSet<Season> Seasons { get; set; }
         public DbSet<Episode> Episodes { get; set; }
+        public DbSet<Special> Specials { get; set; }
+        public DbSet<MovieSpecial> MovieSpecials { get; set; }
         public DbSet<Character> Characters { get; set; }
         public DbSet<CharacterMovie> CharacterMovies { get; set; }
         public DbSet<CharacterTvSeries> CharacterTvSeries { get; set; }
@@ -24,6 +28,7 @@ namespace MovieMart.DataAccess
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<ActivityLog> ActivityLogs { get; set; }
+
         #endregion
 
         /// <summary>
@@ -45,71 +50,133 @@ namespace MovieMart.DataAccess
             // This ensures that any basic configuration is applied before any additional customization is applied
             base.OnModelCreating(modelBuilder);
 
-            #region Many To Many In Table :
-            // Many-to-Many: Character <-> Movie
-            modelBuilder.Entity<CharacterMovie>()
-                .HasKey(cm => new { cm.CharacterId, cm.MovieId });
 
-            modelBuilder.Entity<CharacterMovie>()
-                .HasOne(cm => cm.Character)
-                .WithMany(c => c.CharacterMovies)
-                .HasForeignKey(cm => cm.CharacterId);
+            #region Decimal Precision Configurations
+            // Configure Rating and Discount Properties
+            modelBuilder.Entity<Episode>()
+            .Property(e => e.Rating)
+            .HasPrecision(3, 1); // For ratings from 0.0 to 9.9
 
-            modelBuilder.Entity<CharacterMovie>()
-                .HasOne(cm => cm.Movie)
-                .WithMany(m => m.CharacterMovies)
-                .HasForeignKey(cm => cm.MovieId);
+            modelBuilder.Entity<Special>()
+            .Property(s => s.DiscountPercentage)
+            .HasPrecision(5, 2); // For discount from 0.00 to 100.00
 
-
-            // Many-to-Many: Cinema <-> Movie
-            modelBuilder.Entity<CinemaMovie>()
-                .HasKey(cm => new { cm.CinemaId, cm.MovieId });
-
-            modelBuilder.Entity<CinemaMovie>()
-                .HasOne(cm => cm.Cinema)
-                .WithMany(c => c.CinemaMovies)
-                .HasForeignKey(cm => cm.CinemaId);
-
-            modelBuilder.Entity<CinemaMovie>()
-                .HasOne(cm => cm.Movie)
-                .WithMany(m => m.CinemaMovies)
-                .HasForeignKey(cm => cm.MovieId);
-
-            // Many-to-Many: Character <-> TvSeries
-            modelBuilder.Entity<CharacterTvSeries>()
-                .HasKey(ct => new { ct.CharacterId, ct.TvSeriesId });
-
-            modelBuilder.Entity<CharacterTvSeries>()
-                .HasOne(ct => ct.Character)
-                .WithMany(c => c.CharacterTvSeries)
-                .HasForeignKey(ct => ct.CharacterId);
-
-            modelBuilder.Entity<CharacterTvSeries>()
-                .HasOne(ct => ct.TvSeries)
-                .WithMany(ts => ts.Characters)
-                .HasForeignKey(ct => ct.TvSeriesId);
+            // Configure the Price property as a double type
+            modelBuilder.Entity<Movie>(entity =>
+            {
+                entity.Property(m => m.Price)
+                .HasColumnType("float") // SQL Server storage type
+                .IsRequired()
+                .HasDefaultValue(0.0);
+            });
             #endregion
 
-            #region One To Many :
-            // One-to-Many: TvSeries <-> Season
-            modelBuilder.Entity<Season>()
-                .HasOne(s => s.TvSeries)
-                .WithMany(ts => ts.Seasons)
-                .HasForeignKey(s => s.TvSeriesId);
 
-            // One-to-Many: Season <-> Episode
+            #region Many To Many Configurations 
+            // Many-to-Many: Character <-> Movie 
+            modelBuilder.Entity<CharacterMovie>()
+            .HasKey(cm => new { cm.CharacterId, cm.MovieId });
+
+            modelBuilder.Entity<CharacterMovie>()
+            .HasOne(cm => cm.Character)
+            .WithMany(c => c.CharacterMovies)
+            .HasForeignKey(cm => cm.CharacterId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CharacterMovie>()
+            .HasOne(cm => cm.Movie)
+            .WithMany(m => m.CharacterMovies)
+            .HasForeignKey(cm => cm.MovieId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            // Many-to-Many: Cinema <-> Movie 
+            modelBuilder.Entity<CinemaMovie>()
+            .HasKey(cm => new { cm.CinemaId, cm.MovieId });
+
+            modelBuilder.Entity<CinemaMovie>()
+            .HasOne(cm => cm.Cinema)
+            .WithMany(c => c.CinemaMovies)
+            .HasForeignKey(cm => cm.CinemaId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CinemaMovie>()
+            .HasOne(cm => cm.Movie)
+            .WithMany(m => m.CinemaMovies)
+            .HasForeignKey(cm => cm.MovieId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            // Many-to-Many: Character <-> TVSeries 
+            modelBuilder.Entity<CharacterTvSeries>()
+            .HasKey(ct => new { ct.CharacterId, ct.TvSeriesId });
+
+            modelBuilder.Entity<CharacterTvSeries>()
+            .HasOne(ct => ct.Character)
+            .WithMany(c => c.CharacterTvSeries)
+            .HasForeignKey(ct => ct.CharacterId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CharacterTvSeries>()
+            .HasOne(ct => ct.TvSeries)
+            .WithMany(ts => ts.Characters)
+            .HasForeignKey(ct => ct.TvSeriesId)
+            .OnDelete(DeleteBehavior.Cascade);
+            #endregion
+
+
+            #region One To Many Configurations 
+            // One-to-Many: TvSeries <-> Season 
+            modelBuilder.Entity<Season>()
+            .HasOne(s => s.TvSeries)
+            .WithMany(ts => ts.Seasons)
+            .HasForeignKey(s => s.TvSeriesId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            // One-to-Many: Season <-> Episode 
             modelBuilder.Entity<Episode>()
-                .HasOne(e => e.Season)
-                .WithMany(s => s.Episodes)
-                .HasForeignKey(e => e.SeasonId);
+            .HasOne(e => e.Season)
+            .WithMany(s => s.Episodes)
+            .HasForeignKey(e => e.SeasonId)
+            .OnDelete(DeleteBehavior.Cascade);
 
             // One-to-Many: Movie <-> Category
             modelBuilder.Entity<Movie>()
-                .HasOne(m => m.Category)
-                .WithMany(c => c.Movies)
-                .HasForeignKey(m => m.CategoryId)
-                .OnDelete(DeleteBehavior.Cascade);
+            .HasOne(m => m.Category)
+            .WithMany(c => c.Movies)
+            .HasForeignKey(m => m.CategoryId)
+            .OnDelete(DeleteBehavior.Cascade);
             #endregion
+
+
+            #region Additional Configurations
+            // Additional configurations for queries
+            modelBuilder.Entity<Movie>()
+            .HasIndex(m => m.Title)
+            .IsUnique();
+
+            modelBuilder.Entity<Category>()
+            .HasIndex(c => c.Name)
+            .IsUnique();
+
+            modelBuilder.Entity<Cinema>()
+            .HasIndex(c => c.Name)
+            .IsUnique();
+
+            // Additional configurations for the Special entity
+            modelBuilder.Entity<MovieSpecial>()
+                .HasKey(ms => new { ms.MovieId, ms.SpecialId });
+
+            modelBuilder.Entity<MovieSpecial>()
+                .HasOne(ms => ms.Movie)
+                .WithMany(m => m.MovieSpecials)
+                .HasForeignKey(ms => ms.MovieId);
+
+            modelBuilder.Entity<MovieSpecial>()
+                .HasOne(ms => ms.Special)
+                .WithMany(s => s.MovieSpecials)
+                .HasForeignKey(ms => ms.SpecialId);
+
+            #endregion
+
 
             #region Seed Data In Table :
             //  Add anime categories (Genres)
@@ -270,6 +337,8 @@ namespace MovieMart.DataAccess
             );
 
             #endregion
+
+
         }
 
     }

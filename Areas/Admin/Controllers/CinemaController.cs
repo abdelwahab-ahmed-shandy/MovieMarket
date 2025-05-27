@@ -22,6 +22,9 @@ namespace MovieMarket.Areas.Admin.Controllers
             this._movieRepository = movieRepository;
             this._cinemaMovieRepository = cinemaMovieRepository;
         }
+
+
+
         #region View All Data :
         public IActionResult Index(string? query, int page = 1)
         {
@@ -49,6 +52,8 @@ namespace MovieMarket.Areas.Admin.Controllers
         }
 
         #endregion
+
+
 
         #region Create :
         [HttpGet]
@@ -94,6 +99,8 @@ namespace MovieMarket.Areas.Admin.Controllers
             return View(cinemaViewModel);
         }
         #endregion
+
+
 
         #region Edit :
 
@@ -173,6 +180,8 @@ namespace MovieMarket.Areas.Admin.Controllers
 
         #endregion
 
+
+
         #region Delete :
 
         public IActionResult Delete(int Id)
@@ -201,6 +210,7 @@ namespace MovieMarket.Areas.Admin.Controllers
         }
 
         #endregion
+
 
     }
 }

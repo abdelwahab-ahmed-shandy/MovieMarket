@@ -1,0 +1,101 @@
+﻿@model SpecialsVM
+@{
+    ViewData["Title"] = "Specials";
+}
+<div class="container py-4">
+    <!-- Active Specials Section -->
+    @if (Model.ActiveSpecials.Any())
+    {
+        <div class="row mb-5">
+            @foreach (var special in Model.ActiveSpecials)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header bg-danger text-white">
+                            <h3>@special.Name</h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">@special.Description</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-success fs-5">@special.DiscountPercentage% OFF</span>
+                                <small class="text-muted">
+                                    Valid until @special.EndDate.ToString("MMM dd, yyyy")
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">No current special offers available</div>
+    }
+
+    <!-- Movies Section -->
+    <h2 class="text-center mb-4">Featured Movies</h2>
+
+    @if (Model.MoviesWithSpecials.Any())
+    {
+        <div class="row">
+            @foreach (var movie in Model.MoviesWithSpecials)
+            {
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <div class="card h-100">
+                        <img src="@movie.ImgUrl" class="card-img-top" alt="@movie.Title">
+                        <div class="card-body">
+                            <h5 class="card-title">@movie.Title</h5>
+                            <p class="text-muted">@movie.Category?.Name</p>
+                            <div class="price-container">
+                                <span class="original-price">@movie.Price.ToString("C")</span>
+                                <span class="discounted-price">
+                                    @Model.CalculateDiscountedPrice(movie).ToString("C")
+                                </span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a asp-action="Details" asp-route-id="@movie.Id"
+                               class="btn btn-primary w-100">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning">No movies available with current special offers</div>
+    }
+</div>
+
+<style>
+    .card {
+        transition: all 0.3s ease;
+        border: none;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+    .original-price {
+        text-decoration: line-through;
+        color: #dc3545;
+        font-size: 0.9rem;
+    }
+
+    .discounted-price {
+        font-weight: bold;
+        color: #28a745;
+        font-size: 1.1rem;
+    }
+
+    .card-header {
+        font-weight: 600;
+    }
+</style>
