@@ -21,3 +21,4 @@ global using MovieMart.Utility;
 global using MovieMart.DataAccess;
 global using MovieMart.Enums;
 global using MovieMart.ViewComponents;
+global using MovieMart.Migrations;
