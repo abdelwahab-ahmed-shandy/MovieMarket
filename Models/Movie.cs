@@ -55,7 +55,5 @@ namespace MovieMart.Models
         public ICollection<CinemaMovie> CinemaMovies { get; set; } = new List<CinemaMovie>();
 
         public ICollection<MovieSpecial> MovieSpecials { get; set; }
-
-
     }
 }

@@ -9,7 +9,7 @@ global using System.Threading.Tasks;
 global using System.Diagnostics;
 global using Microsoft.Extensions.Logging;
 
-//global using MovieMart.DataAccess;
+global using MovieMart.DataAccess;
 global using MovieMart.Models;
 global using MovieMart.Models.ViewModels;
 global using MovieMart.Repositories;
@@ -18,7 +18,6 @@ global using MovieMart.Areas;
 global using MovieMart.Services;
 global using MovieMart.Services.IServices;
 global using MovieMart.Utility;
-global using MovieMart.DataAccess;
 global using MovieMart.Enums;
 global using MovieMart.ViewComponents;
 global using MovieMart.Migrations;

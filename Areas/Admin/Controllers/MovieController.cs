@@ -49,6 +49,8 @@ namespace MovieMart.Areas.Admin.Controllers
             return View(movie);
         }
 
+
+
         [HttpGet]
         public IActionResult Create()
         {
