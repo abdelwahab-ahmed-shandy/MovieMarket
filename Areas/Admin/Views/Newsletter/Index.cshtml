@@ -1,0 +1,56 @@
+﻿@model List<MovieMart.Models.Subscriber>
+@{
+    ViewData["Title"] = "Newsletter Subscribers";
+    var query = Context.Request.Query["query"];
+}
+
+<h2 class="mb-4">Newsletter Subscribers</h2>
+
+<form method="get" class="mb-3 d-flex">
+    <input type="text" name="query" value="@query" class="form-control me-2" placeholder="Search by email or date (yyyy-mm-dd)" />
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-warning">No subscribers found.</div>
+}
+else
+{
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Email</th>
+                <th>Subscribed At</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <tr>
+                    <td>@(i + 1)</td>
+                    <td>@Model[i].Email</td>
+                    <td>@Model[i].SubscribedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <nav>
+        <ul class="pagination justify-content-center">
+            @{
+                int currentPage = (int)ViewBag.currentPage;
+                int totalPages = (int)ViewBag.totalPages;
+
+                for (int i = 1; i <= totalPages; i++)
+                {
+                    <li class="page-item @(i == currentPage ? "active" : "")">
+                        <a class="page-link" href="?page=@i&query=@query">@i</a>
+                    </li>
+                }
+            }
+        </ul>
+    </nav>
+}

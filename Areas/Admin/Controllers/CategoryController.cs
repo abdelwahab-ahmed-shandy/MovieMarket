@@ -63,7 +63,7 @@ namespace MovieMart.Areas.Admin.Controllers
                 _categoryRepository.SaveDB();
 
                 // Set the success message in TempData
-                TempData["notifiction"] = "The category was created successfully!";
+                TempData["notification"] = "The category was created successfully!";
                 TempData["MessageType"] = "success";
 
                 return RedirectToAction(nameof(Index));
@@ -93,7 +93,7 @@ namespace MovieMart.Areas.Admin.Controllers
         {
             if (category == null || !ModelState.IsValid)
             {
-                TempData["notifiction"] = "Category not found!";
+                TempData["notification"] = "Category not found!";
                 TempData["MessageType"] = "error";
 
                 return RedirectToAction("NotFound", "Home");
@@ -102,7 +102,7 @@ namespace MovieMart.Areas.Admin.Controllers
             _categoryRepository.Edit(category);
             _categoryRepository.SaveDB();
 
-            TempData["notifiction"] = "Edit Category Successfully!";
+            TempData["notification"] = "Edit Category Successfully!";
             TempData["MessageType"] = "Success";
 
             return RedirectToAction(nameof(Index));
@@ -119,7 +119,7 @@ namespace MovieMart.Areas.Admin.Controllers
             _categoryRepository.Delete(category);
             _categoryRepository.SaveDB();
 
-            TempData["notifiction"] = "Category Deleted Successfully!";
+            TempData["notification"] = "Category Deleted Successfully!";
             TempData["MessageType"] = "Success";
             return RedirectToAction(nameof(Index));
         }

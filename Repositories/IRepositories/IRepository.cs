@@ -90,7 +90,26 @@ namespace MovieMart.Repositories.IRepositories
         #endregion
 
 
+        #region Async CRUD Operations
+        Task<T> CreateAsync(T entity, CancellationToken cancellationToken = default);
+        Task<T> UpdateAsync(T entity, CancellationToken cancellationToken = default);
+        Task DeleteAsync(T entity, CancellationToken cancellationToken = default);
+        Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default);
+        #endregion
 
+        #region Query Operations
+        IQueryable<T> GetQuery(
+            Expression<Func<T, bool>>? filter = null,
+            Expression<Func<T, object>>[]? includes = null,
+            bool tracked = true);
+
+        Task<T?> GetByIdAsync(object id, CancellationToken cancellationToken = default);
+        Task<T?> GetFirstAsync(
+            Expression<Func<T, bool>>? filter = null,
+            Expression<Func<T, object>>[]? includes = null,
+            bool tracked = true,
+            CancellationToken cancellationToken = default);
+        #endregion
 
     }
 }

@@ -29,6 +29,10 @@ namespace MovieMart.DataAccess
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<ActivityLog> ActivityLogs { get; set; }
 
+        public DbSet<Subscriber> Subscribers { get; set; }
+        public DbSet<SentEmail> SentEmails { get; set; }
+
+
         #endregion
 
         /// <summary>

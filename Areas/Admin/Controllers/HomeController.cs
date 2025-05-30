@@ -11,6 +11,7 @@ namespace MovieMart.Areas.Admin.Controllers
         private readonly IMovieRepository _movieRepository;
         private readonly ITvSeriesRepository _tvSeriesRepository;
         private readonly IOrderRepository _orderRepository;
+        private readonly ISubscriberRepository _subscriberRepository;
         private readonly IActivityLogRepository _activityLogRepository;
         private readonly UserManager<ApplicationUser> _userManager;
         public HomeController(IApplicationUserRepository applicationUserRepository,
@@ -18,7 +19,8 @@ namespace MovieMart.Areas.Admin.Controllers
                                                                     ITvSeriesRepository tvSeriesRepository,
                                                                         IOrderRepository orderRepository,
                                                                           IActivityLogRepository activityLogRepository,
-                                                                            UserManager<ApplicationUser> userManager)
+                                                                            UserManager<ApplicationUser> userManager,
+                                                                            ISubscriberRepository subscriberRepository)
         {
             _applicationUserRepository = applicationUserRepository;
             _movieRepository = movieRepository;
@@ -26,6 +28,7 @@ namespace MovieMart.Areas.Admin.Controllers
             _tvSeriesRepository = tvSeriesRepository;
             _activityLogRepository = activityLogRepository;
             _userManager = userManager;
+            _subscriberRepository = subscriberRepository;
         }
 
         public IActionResult Index()
@@ -45,6 +48,13 @@ namespace MovieMart.Areas.Admin.Controllers
                 TotalTvSeries = _tvSeriesRepository.Get().AsNoTracking().Count(),
                 TotalOrders = _orderRepository.Get().AsNoTracking().Count(),
                 PendingOrders = _orderRepository.Get().AsNoTracking().Count(o => o.Status == OrderStatus.Pending),
+
+                TotalSubscribers = _subscriberRepository.Get().Count(),
+
+                RecentSubscribers = _subscriberRepository.Get()
+                         .OrderByDescending(s => s.SubscribedAt)
+                         .Take(5)
+                         .ToList(),
 
                 // todo : here 
                 //NewUsersThisMonth = _userManager.Users.Count(u=>u.Created),

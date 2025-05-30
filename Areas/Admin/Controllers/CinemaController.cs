@@ -88,7 +88,7 @@ namespace MovieMarket.Areas.Admin.Controllers
                 _cinemaRepository.Create(cinemaDB);
                 _cinemaRepository.SaveDB();
 
-                TempData["notifiction"] = "The Cinema was created successfully!";
+                TempData["notification"] = "The Cinema was created successfully!";
                 TempData["MessageType"] = "success";
 
                 return RedirectToAction("Index");
@@ -168,7 +168,7 @@ namespace MovieMarket.Areas.Admin.Controllers
                 _cinemaRepository.Edit(cinema);
                 _cinemaRepository.SaveDB();
 
-                TempData["notifiction"] = "Edit Cinema Successfully!";
+                TempData["notification"] = "Edit Cinema Successfully!";
                 TempData["MessageType"] = "Success";
 
                 return RedirectToAction("Index");
@@ -200,7 +200,7 @@ namespace MovieMarket.Areas.Admin.Controllers
                 _cinemaRepository.Delete(cinema);
                 _cinemaRepository.SaveDB();
 
-                TempData["notifiction"] = "Cinema Deleted Successfully!";
+                TempData["notification"] = "Cinema Deleted Successfully!";
                 TempData["MessageType"] = "Success";
 
                 return RedirectToAction("Index");

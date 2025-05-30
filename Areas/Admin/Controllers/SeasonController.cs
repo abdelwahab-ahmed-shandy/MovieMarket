@@ -65,7 +65,7 @@ namespace MovieMart.Areas.Admin.Controllers
                 _seasonRepository.SaveDB();
 
                 // Set the success message in TempData
-                TempData["notifiction"] = "The Season was created successfully!";
+                TempData["notification"] = "The Season was created successfully!";
                 TempData["MessageType"] = "success";
 
                 return RedirectToAction(nameof(Index));
@@ -94,7 +94,7 @@ namespace MovieMart.Areas.Admin.Controllers
                 ViewBag.TvSeries = new SelectList(_tvSeriesRepository.Get(), "Id", "Title");
 
                 // Set the success message in TempData
-                TempData["notifiction"] = "Edit Season Successfully!";
+                TempData["notification"] = "Edit Season Successfully!";
                 TempData["MessageType"] = "Success";
 
                 return RedirectToAction(nameof(Index));
@@ -113,7 +113,7 @@ namespace MovieMart.Areas.Admin.Controllers
             _seasonRepository.SaveDB();
 
             // Set the success message in TempData
-            TempData["notifiction"] = "Season Deleted Successfully!";
+            TempData["notification"] = "Season Deleted Successfully!";
             TempData["MessageType"] = "Success";
 
             return RedirectToAction(nameof(Index));

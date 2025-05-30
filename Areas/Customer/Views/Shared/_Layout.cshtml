@@ -288,9 +288,10 @@
                 <div class="col-md-3 mb-4">
                     <h3 class="h5 text-uppercase fw-bold mb-4">Newsletter</h3>
                     <p>Subscribe to our newsletter for the latest updates.</p>
-                    <form class="mt-3">
+                    <form asp-action="Subscribe" asp-controller="Newsletter" asp-area="Customer" method="post" class="mt-3">
+                        @Html.AntiForgeryToken()
                         <div class="input-group mb-3">
-                            <input type="email" class="form-control" placeholder="Your Email" aria-label="Your Email" required>
+                            <input type="email" name="email" class="form-control" placeholder="Your Email" aria-label="Your Email" required>
                             <button class="btn btn-primary" type="submit">Subscribe</button>
                         </div>
                     </form>
@@ -306,6 +307,8 @@
                         </div>
                     </div>
                 </div>
+            
+            
             </div>
 
             <hr class="my-4">
@@ -338,8 +341,9 @@
     <script src="~/js/search.js" asp-append-version="true"></script>
     <script src="~/js/cart.js" asp-append-version="true"></script>
 
-    @await RenderSectionAsync("Scripts", required: false)
+    @await Html.PartialAsync("_Notification")
 
+    @await RenderSectionAsync("Scripts", required: false)
     @RenderSection("Styles", required: false)
 
 

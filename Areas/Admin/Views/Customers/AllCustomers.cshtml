@@ -1,31 +1,4 @@
-﻿@section Scripts
-{
-<script>
-    $(document).ready(function () {
-        // Read the data stored in TempData and remove the extra spaces
-        var message = '@TempData["Message"]'.trim();
-        var messageType = '@TempData["MessageType"]'.trim();
-
-        // Check if there is an actual message to be displayed
-        if (message && message !== 'null' && message !== 'undefined' && message !== '') {
-            // Determine the message type based on its value in TempData
-            switch (messageType?.toLowerCase()) {
-                case 'success':
-                    toastr.success(message, 'Success');
-                    break;
-                case 'error':
-                    toastr.error(message, 'Error');
-                    break;
-                case 'warning':
-                    toastr.warning(message, 'Warning'); 
-                    break;
-                default:
-                    toastr.info(message, 'Notice'); 
-            }
-        }
-    });
-</script>
-}
+﻿
 
 @model IEnumerable<ApplicationUser>
 @{

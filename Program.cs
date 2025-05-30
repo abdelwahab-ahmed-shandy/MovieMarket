@@ -85,7 +85,8 @@ namespace MovieMarket
             builder.Services.AddScoped<ISpecialRepository, SpecialRepository>();
             builder.Services.AddScoped<IRepository<MovieSpecial>, Repository<MovieSpecial>>();
 
-
+            builder.Services.AddScoped<ISubscriberRepository, SubscriberRepository>();
+            builder.Services.AddScoped<ISentEmailRepository, SentEmailRepository>();
 
             // Email Sender .
             builder.Services.AddTransient<IEmailSender, EmailSender>();

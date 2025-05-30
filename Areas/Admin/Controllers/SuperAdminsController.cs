@@ -103,7 +103,7 @@ namespace MovieMart.Areas.Admin.Controllers
                 _applicationUserRepository.SaveDB();
 
                 // Store a success message in TempData to display after redirection
-                TempData["notifiction"] = "The Customer was created successfully!";
+                TempData["notification"] = "The Customer was created successfully!";
                 TempData["MessageType"] = "success";
 
                 // Redirect to the All Suber Admin view page

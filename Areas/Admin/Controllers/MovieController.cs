@@ -91,7 +91,7 @@ namespace MovieMart.Areas.Admin.Controllers
                 _movieRepository.SaveDB();
 
                 // Set the success message in TempData
-                TempData["notifiction"] = "The Movie was created successfully!";
+                TempData["notification"] = "The Movie was created successfully!";
                 TempData["MessageType"] = "success";
 
                 // Redirect the user to the movie list page after successful creation
@@ -165,7 +165,7 @@ namespace MovieMart.Areas.Admin.Controllers
                 _movieRepository.SaveDB();
 
                 // Set the success message in TempData
-                TempData["notifiction"] = "Edit Movie Successfully!";
+                TempData["notification"] = "Edit Movie Successfully!";
                 TempData["MessageType"] = "Success";
 
                 // Redirect to the list of movies after editing
@@ -223,7 +223,7 @@ namespace MovieMart.Areas.Admin.Controllers
                 _movieRepository.SaveDB();
 
                 // Set the success message in TempData
-                TempData["notifiction"] = "Movie Deleted Successfully!";
+                TempData["notification"] = "Movie Deleted Successfully!";
                 TempData["MessageType"] = "Success";
 
                 // Redirect to the list of movies after deletion

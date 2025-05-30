@@ -16,5 +16,9 @@
         public int NewContentToday { get; set; }
         public int HighPriorityOrders { get; set; }
 
+
+        public int TotalSubscribers { get; set; }
+        public IEnumerable<Subscriber> RecentSubscribers { get; set; }
+
     }
 }

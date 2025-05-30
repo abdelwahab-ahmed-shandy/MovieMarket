@@ -89,7 +89,7 @@ namespace MovieMart.Areas.Users.Views.Customer.Controllers
 
             _cartRepository.SaveDB();
 
-            TempData["notifiction"] = "Add Movie To Cart successfully!";
+            TempData["notification"] = "Add Movie To Cart successfully!";
             TempData["MessageType"] = "Success";
 
             return RedirectToAction("Index", "Cart", new { area = "Customer" });
@@ -111,12 +111,12 @@ namespace MovieMart.Areas.Users.Views.Customer.Controllers
                 _cartRepository.Delete(DeleteItem);
                 _cartRepository.SaveDB();
 
-                TempData["notifiction"] = "🗑️ The item has been removed from your cart.";
+                TempData["notification"] = "🗑️ The item has been removed from your cart.";
                 TempData["MessageType"] = "Success";
             }
             else
             {
-                TempData["notifiction"] = "⚠️ The item you're trying to remove does not exist.";
+                TempData["notification"] = "⚠️ The item you're trying to remove does not exist.";
                 TempData["MessageType"] = "Warning";
             }
 
@@ -140,7 +140,7 @@ namespace MovieMart.Areas.Users.Views.Customer.Controllers
                 _cartRepository.SaveDB();
             }
 
-            TempData["notifiction"] = " One More Ticket Added To Your Cart !";
+            TempData["notification"] = " One More Ticket Added To Your Cart !";
             TempData["MessageType"] = "Success";
             return RedirectToAction("Index");
         }
@@ -158,20 +158,20 @@ namespace MovieMart.Areas.Users.Views.Customer.Controllers
                 {
                     cartItem.Count -= 1;
                     _cartRepository.SaveDB();
-                    TempData["notifiction"] = "🛒 One Ticket Removed From Your Cart!";
+                    TempData["notification"] = "🛒 One Ticket Removed From Your Cart!";
                 }
                 else if (cartItem.Count == 1)
                 {
                     _cartRepository.Delete(cartItem);
                     _cartRepository.SaveDB();
-                    TempData["notifiction"] = "🗑️ Movie Removed From Your Cart.";
+                    TempData["notification"] = "🗑️ Movie Removed From Your Cart.";
                 }
 
                 TempData["MessageType"] = "Success";
             }
             else
             {
-                TempData["notifiction"] = "Movie not found in the cart.";
+                TempData["notification"] = "Movie not found in the cart.";
                 TempData["MessageType"] = "Error";
             }
 
@@ -198,7 +198,7 @@ namespace MovieMart.Areas.Users.Views.Customer.Controllers
             if (orderTotal < 30)
             {
                 // Show a view or message to user telling them the minimum allowed
-                TempData["notifiction"] = "The minimum payment is 25 Egyptian pounds!";
+                TempData["notification"] = "The minimum payment is 25 Egyptian pounds!";
                 TempData["MessageType"] = "error";
 
                 return RedirectToAction("Index", "Cart");

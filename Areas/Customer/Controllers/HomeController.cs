@@ -279,7 +279,9 @@ namespace MovieMart.Areas.Users.Views.Customer.Controllers
         #endregion
 
 
-        //todo: Done Customer Area 
+
+
+
     }
 
 }

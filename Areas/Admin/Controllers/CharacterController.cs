@@ -58,7 +58,7 @@ namespace MovieMart.Areas.Admin.Controllers
                 _characterRepository.SaveDB();
 
                 // Set the success message in TempData
-                TempData["notifiction"] = "The Character was created successfully!";
+                TempData["notification"] = "The Character was created successfully!";
                 TempData["MessageType"] = "success";
 
                 return RedirectToAction(nameof(Index));
@@ -87,7 +87,7 @@ namespace MovieMart.Areas.Admin.Controllers
                 _characterRepository.SaveDB();
 
                 // Set the success message in TempData
-                TempData["notifiction"] = "Edit Character Successfully!";
+                TempData["notification"] = "Edit Character Successfully!";
                 TempData["MessageType"] = "Success";
                 return RedirectToAction(nameof(Index));
             }
@@ -106,7 +106,7 @@ namespace MovieMart.Areas.Admin.Controllers
             _characterRepository.SaveDB();
 
             // Set the success message in TempData
-            TempData["notifiction"] = "Character Deleted Successfully!";
+            TempData["notification"] = "Character Deleted Successfully!";
             TempData["MessageType"] = "Success";
 
             return RedirectToAction(nameof(Index));

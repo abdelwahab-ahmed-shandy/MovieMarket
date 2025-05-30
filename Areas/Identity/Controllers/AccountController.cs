@@ -91,7 +91,7 @@ namespace MovieMart.Areas.Identity.Controllers
                     $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     //  Add a notification to the user informing them of the need to confirm their email
-                    TempData["notifiction"] = "Your account has been created! Please check your email to confirm the account before logging in";
+                    TempData["notification"] = "Your account has been created! Please check your email to confirm the account before logging in";
                     TempData["MessageType"] = "Success";
 
                     //  Automatically add the user to the "Customer" role
@@ -387,7 +387,7 @@ namespace MovieMart.Areas.Identity.Controllers
             if (signInResult.Succeeded)
             {
                 TempData["SuccessMessage"] =
-                TempData["notifiction"] = "Successfully logged in with Google.";
+                TempData["notification"] = "Successfully logged in with Google.";
                 TempData["MessageType"] = "success";
                 return LocalRedirect(returnUrl); // Redirect to the page the user requested
             }
@@ -413,7 +413,7 @@ namespace MovieMart.Areas.Identity.Controllers
                 if (addLoginResult.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    TempData["notifiction"] = "Google account linked and login successful.";
+                    TempData["notification"] = "Google account linked and login successful.";
                     TempData["MessageType"] = "success";
                     return LocalRedirect(returnUrl);
                 }
@@ -449,7 +449,7 @@ namespace MovieMart.Areas.Identity.Controllers
                 if (addLoginResult.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    TempData["notifiction"] = "Account created and successful sign-in via Google.";
+                    TempData["notification"] = "Account created and successful sign-in via Google.";
                     TempData["MessageType"] = "success";
                     return LocalRedirect(returnUrl);
                 }

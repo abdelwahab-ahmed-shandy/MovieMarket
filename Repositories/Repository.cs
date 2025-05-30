@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
@@ -18,6 +19,7 @@ namespace MovieMart.Repositories
             this._movieMarketDbContext = movieMartDbContext;
             dbSet = _movieMarketDbContext.Set<T>();
         }
+
 
         #region CRUD Operations
 
@@ -148,6 +150,75 @@ namespace MovieMart.Repositories
         #endregion
 
 
+        #region Async Operations
+
+        #region Async CRUD Operations
+        public async Task<T> CreateAsync(T entity, CancellationToken cancellationToken = default)
+        {
+            await dbSet.AddAsync(entity, cancellationToken);
+            return entity;
+        }
+
+        public async Task<T> UpdateAsync(T entity, CancellationToken cancellationToken = default)
+        {
+            dbSet.Update(entity);
+            return await Task.FromResult(entity);
+        }
+
+        public async Task DeleteAsync(T entity, CancellationToken cancellationToken = default)
+        {
+            dbSet.Remove(entity);
+            await Task.CompletedTask;
+        }
+
+        public async Task<bool> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return await _movieMarketDbContext.SaveChangesAsync(cancellationToken) > 0;
+            }
+            catch (Exception ex)
+            {
+                // Log the error properly in production
+                Console.WriteLine($"Error saving changes: {ex.Message}");
+                return false;
+            }
+        }
+        #endregion
+
+        #region Query Operations
+        public IQueryable<T> GetQuery(
+            Expression<Func<T, bool>>? filter = null,
+            Expression<Func<T, object>>[]? includes = null,
+            bool tracked = true)
+        {
+            IQueryable<T> query = tracked ? dbSet : dbSet.AsNoTracking();
+
+            if (includes != null)
+            {
+                query = includes.Aggregate(query, (current, include) => current.Include(include));
+            }
+
+            return filter != null ? query.Where(filter) : query;
+        }
+
+        public async Task<T?> GetByIdAsync(object id, CancellationToken cancellationToken = default)
+        {
+            return await dbSet.FindAsync(new object[] { id }, cancellationToken);
+        }
+
+        public async Task<T?> GetFirstAsync(
+            Expression<Func<T, bool>>? filter = null,
+            Expression<Func<T, object>>[]? includes = null,
+            bool tracked = true,
+            CancellationToken cancellationToken = default)
+        {
+            var query = GetQuery(filter, includes, tracked);
+            return await query.FirstOrDefaultAsync(cancellationToken);
+        }
+        #endregion
+
+        #endregion
 
     }
 }

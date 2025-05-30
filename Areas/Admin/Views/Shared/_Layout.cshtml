@@ -346,13 +346,28 @@
                             Episodes
                         </a>
 
-                        @* <div class="sb-sidenav-menu-heading">Some Additions</div> *@
+                        <div class="sb-sidenav-menu-heading">Subscribers</div>
+
+                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Newsletter" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")"
+                           asp-area="Admin" asp-controller="Newsletter" asp-action="Index">
+                            <div class="sb-nav-link-icon"><i class="bi bi-envelope"></i></div>
+                            Newsletter Subscribers
+                        </a>
 
 
-                        @* <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Episode" ? "active" : "")" asp-area="Admin" asp-controller="Episode" asp-action="Index"> *@
-                        @*     <div class="sb-nav-link-icon"><i class="bi bi-play-circle"></i></div> *@
-                        @*     Episodes *@
-                        @* </a> *@
+                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Newsletter" && ViewContext.RouteData.Values["Action"]?.ToString() == "SendEmail" ? "active" : "")"
+                           asp-area="Admin" asp-controller="Newsletter" asp-action="SendEmail">
+                            <div class="sb-nav-link-icon"><i class="bi bi-send-check-fill"></i></div>
+                            Send Email to Subscribers
+                        </a>
+                        
+
+                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Newsletter" && ViewContext.RouteData.Values["Action"]?.ToString() == "EmailHistory" ? "active" : "")"
+                           asp-area="Admin" asp-controller="Newsletter" asp-action="EmailHistory">
+                            <div class="sb-nav-link-icon"><i class="bi bi-clock-history"></i></div>
+                            Sent Emails History
+                        </a>
+
 
                         <div class="sb-sidenav-menu-heading">Orders</div>
 
@@ -417,6 +432,8 @@
     <script src="~/assets/dashboard/js/datatables-simple-demo.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    @await Html.PartialAsync("_Notification")
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

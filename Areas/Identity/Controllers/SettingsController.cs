@@ -126,7 +126,7 @@ namespace MovieMart.Areas.Identity.Controllers
 
             // Use the same keys in the view
 
-            TempData["notifiction"] = "Profile updated successfully";
+            TempData["notification"] = "Profile updated successfully";
 
             TempData["MessageType"] = "Success";
 
@@ -150,7 +150,7 @@ namespace MovieMart.Areas.Identity.Controllers
 
                 if (result.Succeeded)
                 {
-                    TempData["notifiction"] = "Password changed successfully";
+                    TempData["notification"] = "Password changed successfully";
                     TempData["MessageType"] = "Success";
                     return RedirectToAction("Profile", "Settings");
                 }
@@ -162,7 +162,7 @@ namespace MovieMart.Areas.Identity.Controllers
             }
 
             // If we got this far, something failed
-            TempData["notifiction"] = "Failed to change password";
+            TempData["notification"] = "Failed to change password";
             TempData["MessageType"] = "Notice";
             return RedirectToAction("Profile", "Settings");
         }
@@ -190,7 +190,7 @@ namespace MovieMart.Areas.Identity.Controllers
             // If the user is not found, an error message is displayed and redirects to the home page
             if (user == null)
             {
-                TempData["notifiction"] = "User not found.";
+                TempData["notification"] = "User not found.";
                 TempData["MessageType"] = "Error";
                 return RedirectToAction("Index", "Home");
             }
@@ -199,7 +199,7 @@ namespace MovieMart.Areas.Identity.Controllers
             if (await _userManager.IsInRoleAsync(user, "Admin") || await _userManager.IsInRoleAsync(user, "SuperAdmin"))
             {
                 // Prevents account deletion if the user is an administrator (Admin or SuperAdmin)
-                TempData["notifiction"] = "Admins and SuperAdmins cannot delete their own accounts.";
+                TempData["notification"] = "Admins and SuperAdmins cannot delete their own accounts.";
                 TempData["MessageType"] = "Error";
                 return RedirectToAction("Profile");
             }
@@ -215,7 +215,7 @@ namespace MovieMart.Areas.Identity.Controllers
             {
 
                 // Set the success message in TempData
-                TempData["notifiction"] = "An error occurred while deleting the account.";
+                TempData["notification"] = "An error occurred while deleting the account.";
                 TempData["MessageType"] = "error";
 
                 return RedirectToAction("Profile");
@@ -226,7 +226,7 @@ namespace MovieMart.Areas.Identity.Controllers
             await _signInManager.SignOutAsync();
 
             // Displays a success message and redirects the user to the "Customer" section home page.
-            TempData["notifiction"] = "Your account has been successfully deleted.";
+            TempData["notification"] = "Your account has been successfully deleted.";
             TempData["MessageType"] = "Warning";
 
             return RedirectToAction("Login", "Account", new { area = "Identity" });
